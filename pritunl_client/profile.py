@@ -442,29 +442,16 @@ def import_uri(profile_uri):
         profile_uri = profile_uri.replace('pritunl', 'https', 1)
     elif profile_uri.startswith('pts:'):
         profile_uri = profile_uri.replace('pts', 'https', 1)
-    elif profile_uri.startswith('pt:'):
-        profile_uri = profile_uri.replace('pt', 'http', 1)
     elif profile_uri.startswith('https:'):
         pass
     elif profile_uri.startswith('http:'):
-        pass
+        profile_uri = profile_uri.replace('http', 'https', 1)
     else:
         profile_uri = 'https://' + profile_uri
     profile_uri = profile_uri.replace('/k/', '/ku/', 1)
 
-    for i in xrange(2):
-        try:
-            response = requests.get(profile_uri, verify=False,
-                timeout=IMPORT_TIMEOUT)
-            if response.status_code != 400:
-                break
-        except:
-            if i == 1:
-                raise
-        if profile_uri.startswith('https'):
-            profile_uri = profile_uri.replace('https', 'http', 1)
-        else:
-            profile_uri = profile_uri.replace('http', 'https', 1)
+    response = requests.get(profile_uri, verify=False,
+        timeout=IMPORT_TIMEOUT)
     if response.status_code == 200:
         pass
     elif response.status_code == 404:
