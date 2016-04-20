@@ -1,6 +1,10 @@
 pritunl-client changelog
 ========================
 
+<%= version %>
+
+Fix issues with import profile
+
 Version 1.0.894.98 2016-02-23
 -----------------------------
 
