@@ -103,6 +103,8 @@ if install_gtk:
             'pritunl_client.__main__:pk_clear_autostart',
         'pritunl-client-pk-get-devices = ' + \
             'pritunl_client.__main__:pk_get_devices',
+        'pritunl-client-pk-format-device = ' + \
+            'pritunl_client.__main__:pk_format_device',
     ]
 
 patch_files = []
