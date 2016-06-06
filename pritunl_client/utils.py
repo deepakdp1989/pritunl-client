@@ -159,6 +159,6 @@ def get_usb_drives():
             continue
 
         disks[disk_device] = vendor + (' ' + model if model else '') + \
-                             ' (%s)' % disk_size
+            ' (%s)' % disk_size
 
     return disks
