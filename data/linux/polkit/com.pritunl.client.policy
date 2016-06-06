@@ -63,4 +63,16 @@
     <annotate key="org.freedesktop.policykit.exec.path">/usr/bin/pritunl-client-pk-clear-autostart</annotate>
     <annotate key="org.freedesktop.policykit.exec.allow_gui">true</annotate>
   </action>
+
+  <action id="com.pritunl.client.profile_get_devices">
+    <description>Find usb devices</description>
+    <message>Authentication is required to find usb devices</message>
+    <defaults>
+      <allow_any>yes</allow_any>
+      <allow_inactive>yes</allow_inactive>
+      <allow_active>yes</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/bin/pritunl-client-pk-get-devices</annotate>
+    <annotate key="org.freedesktop.policykit.exec.allow_gui">true</annotate>
+  </action>
 </policyconfig>
