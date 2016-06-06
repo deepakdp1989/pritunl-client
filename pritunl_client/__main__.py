@@ -12,13 +12,14 @@ import json
 import requests
 
 def client_gui():
+    import pritunl_client
     from pritunl_client import app
     parser = optparse.OptionParser()
     parser.add_option('--version', action='store_true', help='Print version')
     (options, args) = parser.parse_args()
 
     if options.version:
-        print '%s v%s' % (pritunl.__title__, pritunl.__version__)
+        print '%s v%s' % (pritunl_client.__title__, pritunl_client.__version__)
     else:
         client_app = app.App()
         client_app.main()
