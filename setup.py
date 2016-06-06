@@ -101,6 +101,8 @@ if install_gtk:
             'pritunl_client.__main__:pk_set_autostart',
         'pritunl-client-pk-clear-autostart = ' + \
             'pritunl_client.__main__:pk_clear_autostart',
+        'pritunl-client-pk-get-devices = ' + \
+            'pritunl_client.__main__:pk_get_devices',
     ]
 
 patch_files = []
