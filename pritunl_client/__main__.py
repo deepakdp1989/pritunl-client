@@ -300,3 +300,7 @@ def pk_clear_autostart():
         'etc', 'pritunl_client', sys.argv[1])
     if os.path.exists(profile_hash_path):
         os.remove(profile_hash_path)
+
+def pk_get_devices():
+    from pritunl_client import utils
+    json.dumps(utils.get_usb_drives())
