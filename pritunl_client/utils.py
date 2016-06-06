@@ -33,6 +33,18 @@ def check_output(*args, **kwargs):
 
     return stdoutdata
 
+def check_call_silent(*args, **kwargs):
+    if 'stdout' in kwargs or 'stderr' in kwargs:
+        raise ValueError('Output arguments not allowed, it will be overridden')
+
+    process = subprocess.Popen(stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+        *args, **kwargs)
+    return_code = process.wait()
+
+    if return_code:
+        cmd = kwargs.get('args', args[0])
+        raise subprocess.CalledProcessError(return_code, cmd)
+
 def auth_request(method, host, path, token, secret,
         json_data=None, timeout=None):
     if json_data:
