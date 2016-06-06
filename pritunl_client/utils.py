@@ -11,6 +11,23 @@ import hmac
 import hashlib
 import base64
 import requests
+import subprocess
+
+def check_output(*args, **kwargs):
+    if 'stdout' in kwargs or 'stderr' in kwargs:
+        raise ValueError('Output arguments not allowed, it will be overridden')
+
+    process = subprocess.Popen(
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE,  *args, **kwargs)
+
+    stdoutdata, stderrdata = process.communicate()
+    return_code = process.poll()
+
+    if return_code:
+        raise subprocess.CalledProcessError(
+            return_code, kwargs.get('args', args[0]), output=stdoutdata)
+
+    return stdoutdata
 
 def auth_request(method, host, path, token, secret,
         json_data=None, timeout=None):
