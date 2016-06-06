@@ -162,3 +162,14 @@ def get_usb_drives():
             ' (%s)' % disk_size
 
     return disks
+
+def format_disk(disk_device):
+    process = subprocess.Popen(['fdisk', disk_device],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+    process.communicate('o\nn\np\n\n\n+62500K\n\nw\n')
+    process.wait()
+
+    check_output(['mkfs.fat', '-n', 'PRITUNL', disk_device + '1'])
