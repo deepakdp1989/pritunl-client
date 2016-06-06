@@ -292,7 +292,7 @@ def pk_set_autostart():
     if not os.path.exists(etc_dir):
         os.makedirs(etc_dir)
     profile_hash_path = os.path.join(etc_dir, profile_hash)
-    with open(profile_hash_path, 'w') as profile_hash_file:
+    with open(profile_hash_path, 'w') as _:
         pass
 
 def pk_clear_autostart():
