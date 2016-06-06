@@ -190,12 +190,19 @@ def get_disk_size(disk_device):
         return disk_size
 
 def format_disk(disk_device):
+    disk_size = get_disk_size(disk_device)
+
     process = subprocess.Popen(['fdisk', disk_device],
         stdin=subprocess.PIPE,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
     )
-    process.communicate('o\nn\np\n\n\n+62500K\n\nw\n')
+
+    if disk_size > 128000000:
+        process.communicate('o\nn\np\n\n\n\n\nw\n')
+    else:
+        process.communicate('o\nn\np\n\n\n+62500K\n\nw\n')
+
     process.wait()
 
     check_output(['mkfs.fat', '-n', 'PRITUNL', disk_device + '1'])
