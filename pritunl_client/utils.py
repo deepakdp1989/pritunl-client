@@ -163,6 +163,32 @@ def get_usb_drives():
 
     return disks
 
+def get_disk_size(disk_device):
+    disks_output = check_output(['fdisk', '-l'])
+
+    for disks_line in disks_output.splitlines():
+        disks_line = disks_line.lower()
+        if not disks_line.startswith('disk'):
+            continue
+
+        matches = _disk_device_match.findall(disks_line)
+        if not matches:
+            continue
+
+        if matches[0] != disk_device:
+            continue
+
+        matches = _disk_size_match.findall(disks_line)
+        if not matches:
+            continue
+
+        try:
+            disk_size = int(matches[0])
+        except ValueError:
+            continue
+
+        return disk_size
+
 def format_disk(disk_device):
     process = subprocess.Popen(['fdisk', disk_device],
         stdin=subprocess.PIPE,
