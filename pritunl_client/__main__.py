@@ -309,6 +309,6 @@ def pk_format_device():
     from pritunl_client import utils
     utils.format_disk(sys.argv[1])
 
-def pk_get_disk_profiles():
+def pk_get_disk_profile():
     from pritunl_client import utils
-    json.dumps(utils.get_disk_profiles())
+    print json.dumps(utils.get_disk_profile(sys.argv[1]))
