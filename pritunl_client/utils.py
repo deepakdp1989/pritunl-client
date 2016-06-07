@@ -207,13 +207,13 @@ def get_disk_type(disk_device):
 
     for info_line in info_output.splitlines():
         if 'ID_BUS=' in info_line:
-            return info_line.split('=', 1)[-1].strip()
+            return info_line.split('=', 1)[-1].strip().lower()
 
 def format_disk(disk_device):
     disk_size = get_disk_size(disk_device)
     disk_type = get_disk_type(disk_device)
 
-    if not disk_size or not disk_type != 'usb':
+    if not disk_size or disk_type != 'usb':
         raise TypeError('Invalid disk device')
 
     process = subprocess.Popen(['fdisk', disk_device],
