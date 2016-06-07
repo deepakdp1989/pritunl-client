@@ -192,6 +192,58 @@ class InputDialog:
     def close(self):
         self.destroy()
 
+class SelectDialog:
+    def __init__(self):
+        self._dialog = gtk.MessageDialog(
+            type=gtk.MESSAGE_QUESTION,
+            buttons=gtk.BUTTONS_OK_CANCEL,
+        )
+        self._dialog.set_position(gtk.WIN_POS_CENTER)
+        self._dialog.set_skip_taskbar_hint(False)
+        self._dialog.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_NORMAL)
+        self._label = gtk.Label()
+        self._entry = gtk.combo_box_new_text()
+
+    def set_title(self, title):
+        self._dialog.set_title(title)
+
+    def set_icon(self, icon_path):
+        self._dialog.set_icon_from_file(icon_path)
+
+    def set_message(self, message):
+        self._dialog.set_markup(message)
+
+    def set_message_secondary(self, message):
+        self._dialog.format_secondary_text(message)
+
+    def set_select_label(self, label):
+        self._label.set_label(label)
+
+    def add_select_item(self, text):
+        self._entry.append_text(text)
+
+    def set_visibility(self, visibility):
+        self._entry.set_visibility(visibility)
+
+    def run(self):
+        self._entry.set_active(0)
+        hbox = gtk.HBox()
+        hbox.pack_start(self._label, False, 5, 5)
+        hbox.pack_end(self._entry)
+        self._dialog.vbox.pack_end(hbox, True, True, 0)
+        self._dialog.show_all()
+        self._dialog.set_keep_above(True)
+        self._dialog.set_keep_above(False)
+        response = self._dialog.run()
+        if response == gtk.RESPONSE_OK:
+            return self._entry.get_active()
+
+    def destroy(self):
+        self._dialog.destroy()
+
+    def close(self):
+        self.destroy()
+
 class FileChooserDialog:
     def __init__(self):
         self._filters = {}
