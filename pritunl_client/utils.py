@@ -201,6 +201,14 @@ def get_disk_size(disk_device):
 
         return disk_size
 
+def get_disk_type(disk_device):
+    info_output = check_output([
+        'udevadm', 'info', '--query=all', '-n', disk_device])
+
+    for info_line in info_output.splitlines():
+        if 'ID_BUS=' in info_line:
+            return info_line.split('=', 1)[-1].strip()
+
 def format_disk(disk_device):
     disk_size = get_disk_size(disk_device)
 
