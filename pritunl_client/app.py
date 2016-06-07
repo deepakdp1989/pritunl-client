@@ -257,6 +257,73 @@ class App(object):
             self.update_menu()
         dialog.destroy()
 
+    def on_setup_usb_key(self, profile_id):
+        prfl = profile.Profile.get_profile(profile_id)
+
+        if not profile.has_usb_device():
+            devices = profile.get_usb_devices()
+
+            if not devices:
+                interrupt = False
+                dialog = interface.MessageDialog()
+                refresh_devices = []
+
+                def refresh():
+                    while not interrupt:
+                        devices = profile.get_usb_devices()
+                        if devices:
+                            refresh_devices.append(devices)
+                            try:
+                                dialog.close()
+                            except:
+                                pass
+                            return
+
+                thread = threading.Thread(target=refresh)
+                thread.daemon = True
+                thread.start()
+
+                dialog.set_type(MESSAGE_INFO)
+                dialog.set_buttons(BUTTONS_CANCEL)
+                dialog.set_title(APP_NAME_FORMATED)
+                dialog.set_icon(utils.get_logo())
+                dialog.set_message('Insert USB device...')
+                dialog.set_message_secondary(
+                    'Insert a USB device to use for profile key')
+                dialog.run()
+                dialog.destroy()
+
+                interrupt = True
+                if not refresh_devices:
+                    return
+
+                devices = refresh_devices[0]
+
+            if not profile.has_usb_device():
+                devices_map = []
+                dialog = interface.SelectDialog()
+
+                for usb_device, usb_name in devices.items():
+                    devices_map.append(usb_device)
+                    dialog.add_select_item(usb_name)
+
+                dialog.set_title(APP_NAME_FORMATED)
+                dialog.set_icon(utils.get_logo())
+                dialog.set_message('Format USB device')
+                dialog.set_message_secondary(
+                    'Are you sure you want to format the selected device')
+                response = dialog.run()
+                dialog.destroy()
+
+                if response is None:
+                    return
+
+                device = devices_map[response]
+                profile.format_usb_device(device)
+                time.sleep(1)
+
+        print profile.has_usb_device()
+
     def on_autostart_profile(self, profile_id):
         prfl = profile.Profile.get_profile(profile_id)
         prfl.set_autostart(True)
