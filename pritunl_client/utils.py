@@ -211,6 +211,10 @@ def get_disk_type(disk_device):
 
 def format_disk(disk_device):
     disk_size = get_disk_size(disk_device)
+    disk_type = get_disk_type(disk_device)
+
+    if not disk_size or not disk_type != 'usb':
+        raise TypeError('Invalid disk device')
 
     process = subprocess.Popen(['fdisk', disk_device],
         stdin=subprocess.PIPE,
