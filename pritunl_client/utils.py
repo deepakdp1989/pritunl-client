@@ -245,12 +245,12 @@ def get_disk_profile(profile_id, timeout=30):
     os.makedirs(mount_dir)
 
     try:
-        check_call_silent(['umount', '/dev/disk/by-label/PRITUNL'])
+        check_call_silent(['umount', USB_DISK_PATH])
     except subprocess.CalledProcessError:
         pass
 
     try:
-        check_call_silent(['mount', '/dev/disk/by-label/PRITUNL', mount_dir])
+        check_call_silent(['mount', USB_DISK_PATH, mount_dir])
 
         for file_name in os.listdir(mount_dir):
             if not file_name.endswith('.json'):
@@ -267,7 +267,7 @@ def get_disk_profile(profile_id, timeout=30):
                 pass
     finally:
         try:
-            check_call_silent(['umount', '/dev/disk/by-label/PRITUNL'])
+            check_call_silent(['umount', USB_DISK_PATH])
         except subprocess.CalledProcessError:
             pass
         try:
