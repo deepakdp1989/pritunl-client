@@ -275,4 +275,44 @@ def get_disk_profile(profile_id, timeout=30):
         except:
             pass
 
-    return profiles
+    return {}
+
+def set_disk_profile(profile_id, profile_iv, profile_key, timeout=30):
+    start = time.time()
+
+    while True:
+        if os.path.exists(USB_DISK_PATH):
+            break
+        time.sleep(0.1)
+        if time.time() - start >= timeout:
+            return False
+
+    mount_dir = os.path.join(USB_DISK_MOUNT_DIR, uuid.uuid4().hex)
+    os.makedirs(mount_dir)
+
+    try:
+        check_call_silent(['umount', USB_DISK_PATH])
+    except subprocess.CalledProcessError:
+        pass
+
+    try:
+        check_call_silent(['mount', USB_DISK_PATH, mount_dir])
+
+        file_path = os.path.join(mount_dir, profile_id + '.json')
+        with open(file_path, 'w') as profile_file:
+            profile_file.write(json.dumps({
+                'version': 1,
+                'iv': profile_iv,
+                'key': profile_key,
+            }))
+    finally:
+        try:
+            check_call_silent(['umount', USB_DISK_PATH])
+        except subprocess.CalledProcessError:
+            pass
+        try:
+            os.removedirs(mount_dir)
+        except:
+            pass
+
+    return True
