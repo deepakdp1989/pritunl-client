@@ -231,7 +231,7 @@ def format_disk(disk_device):
 
     check_output(['mkfs.fat', '-n', 'PRITUNL', disk_device + '1'])
 
-def get_disk_profiles(timeout=30):
+def get_disk_profile(profile_id, timeout=30):
     start = time.time()
 
     while True:
@@ -249,21 +249,20 @@ def get_disk_profiles(timeout=30):
     except subprocess.CalledProcessError:
         pass
 
-    profiles = {}
-
     try:
-        check_output(['mount', '/dev/disk/by-label/PRITUNL', mount_dir])
+        check_call_silent(['mount', '/dev/disk/by-label/PRITUNL', mount_dir])
 
         for file_name in os.listdir(mount_dir):
             if not file_name.endswith('.json'):
                 continue
 
-            profile_id = file_name.split('.')[0]
-            file_path = os.path.join(mount_dir, file_name)
+            if profile_id != file_name.split('.')[0]:
+                return
 
+            file_path = os.path.join(mount_dir, file_name)
             try:
                 with open(file_path, 'r') as profile_file:
-                    profiles[profile_id] = json.loads(profile_file.read())
+                    return json.loads(profile_file.read())
             except:
                 pass
     finally:
