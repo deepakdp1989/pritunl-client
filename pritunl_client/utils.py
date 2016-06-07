@@ -230,3 +230,50 @@ def format_disk(disk_device):
     process.wait()
 
     check_output(['mkfs.fat', '-n', 'PRITUNL', disk_device + '1'])
+
+def read_disk_profiles(timeout=30):
+    start = time.time()
+
+    while True:
+        if os.path.exists(USB_DISK_PATH):
+            break
+        time.sleep(0.1)
+        if time.time() - start >= timeout:
+            return {}
+
+    mount_dir = os.path.join(USB_DISK_MOUNT_DIR, uuid.uuid4().hex)
+    os.makedirs(mount_dir)
+
+    try:
+        check_call_silent(['umount', '/dev/disk/by-label/PRITUNL'])
+    except subprocess.CalledProcessError:
+        pass
+
+    profiles = {}
+
+    try:
+        check_output(['mount', '/dev/disk/by-label/PRITUNL', mount_dir])
+
+        for file_name in os.listdir(mount_dir):
+            if not file_name.endswith('.json'):
+                continue
+
+            profile_id = file_name.split('.')[0]
+            file_path = os.path.join(mount_dir, file_name)
+
+            try:
+                with open(file_path, 'r') as profile_file:
+                    profiles[profile_id] = json.loads(profile_file.read())
+            except:
+                pass
+    finally:
+        try:
+            check_call_silent(['umount', '/dev/disk/by-label/PRITUNL'])
+        except subprocess.CalledProcessError:
+            pass
+        try:
+            os.removedirs(mount_dir)
+        except:
+            pass
+
+    return profiles
