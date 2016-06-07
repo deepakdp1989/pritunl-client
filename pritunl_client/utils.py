@@ -231,7 +231,7 @@ def format_disk(disk_device):
 
     check_output(['mkfs.fat', '-n', 'PRITUNL', disk_device + '1'])
 
-def read_disk_profiles(timeout=30):
+def get_disk_profiles(timeout=30):
     start = time.time()
 
     while True:
