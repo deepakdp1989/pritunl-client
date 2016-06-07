@@ -107,6 +107,8 @@ if install_gtk:
             'pritunl_client.__main__:pk_format_device',
         'pritunl-client-pk-get-disk-profile = ' + \
             'pritunl_client.__main__:pk_get_disk_profile',
+        'pritunl-client-pk-set-disk-profile = ' + \
+            'pritunl_client.__main__:pk_set_disk_profile',
     ]
 
 patch_files = []
