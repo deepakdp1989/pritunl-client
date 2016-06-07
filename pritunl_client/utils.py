@@ -229,7 +229,7 @@ def format_disk(disk_device):
 
     process.wait()
 
-    check_output(['mkfs.fat', '-n', 'PRITUNL', disk_device + '1'])
+    check_call_silent(['mkfs.fat', '-n', 'PRITUNL', disk_device + '1'])
 
 def get_disk_profile(profile_id, timeout=30):
     start = time.time()
