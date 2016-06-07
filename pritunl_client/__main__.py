@@ -303,7 +303,7 @@ def pk_clear_autostart():
 
 def pk_get_devices():
     from pritunl_client import utils
-    json.dumps(utils.get_usb_drives())
+    print json.dumps(utils.get_usb_drives())
 
 def pk_format_device():
     from pritunl_client import utils
