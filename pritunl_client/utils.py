@@ -222,7 +222,7 @@ def format_disk(disk_device):
         stderr=subprocess.PIPE,
     )
 
-    if disk_size > 64000000:
+    if disk_size < 64000000:
         process.communicate('o\nn\np\n\n\n\n\nw\n')
     else:
         process.communicate('o\nn\np\n\n\n+15625K\n\nw\n')
