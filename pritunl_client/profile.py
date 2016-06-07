@@ -481,3 +481,13 @@ def get_usb_devices():
         return devices
     else:
         return {}
+
+def format_usb_device(device):
+    if PLATFORM == LINUX or PLATFORM == SHELL:
+        utils.check_output([
+            'pkexec',
+            '/usr/bin/pritunl-client-pk-format-device',
+            device,
+        ])
+    else:
+        pass
