@@ -464,3 +464,20 @@ def import_uri(profile_uri):
     for key in data:
         prfl = Profile.get_profile()
         prfl.write_profile(data[key])
+
+def has_usb_device():
+    if PLATFORM == LINUX or PLATFORM == SHELL:
+        return os.path.exists(USB_DISK_PATH)
+    else:
+        return False
+
+def get_usb_devices():
+    if PLATFORM == LINUX or PLATFORM == SHELL:
+        devices = utils.check_output([
+            'pkexec',
+            '/usr/bin/pritunl-client-pk-get-devices',
+        ])
+        devices = json.loads(devices)
+        return devices
+    else:
+        return {}
