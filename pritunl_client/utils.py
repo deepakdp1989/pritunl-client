@@ -241,6 +241,12 @@ def get_disk_profile(profile_id, timeout=30):
         if time.time() - start >= timeout:
             return {}
 
+    disk_size = get_disk_size(USB_DISK_PATH)
+    disk_type = get_disk_type(USB_DISK_PATH)
+
+    if disk_size > 128000000 or disk_type != 'usb':
+        raise TypeError('Invalid disk device')
+
     mount_dir = os.path.join(USB_DISK_MOUNT_DIR, uuid.uuid4().hex)
     os.makedirs(mount_dir)
 
