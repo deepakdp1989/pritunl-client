@@ -374,7 +374,6 @@ class Profile(object):
                     else:
                         continue
                 data['started'] = True
-                print line.strip()
                 with open(self.log_path, 'a') as log_file:
                     log_file.write(line)
                 if not started:
