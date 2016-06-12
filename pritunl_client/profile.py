@@ -38,6 +38,7 @@ class Profile(object):
         self.sync_secret = None
         self.sync_hosts = []
         self.autostart = False
+        self.encrypted = 0
         self.auth_passwd = False
         self.pid = None
 
@@ -72,6 +73,7 @@ class Profile(object):
             'sync_secret': self.sync_secret,
             'sync_hosts': self.sync_hosts,
             'autostart': self.autostart,
+            'encrypted': self.encrypted,
             'pid': self.pid,
         }
 
@@ -119,6 +121,7 @@ class Profile(object):
                     self.sync_secret = data.get('sync_secret')
                     self.sync_hosts = data.get('sync_hosts', [])
                     self.autostart = data.get('autostart', False)
+                    self.encrypted = data.get('encrypted', 0)
                     self.pid = data.get('pid')
 
                 with open(self.path, 'r') as ovpn_file:
