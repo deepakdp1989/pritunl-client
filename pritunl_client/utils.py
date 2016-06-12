@@ -256,7 +256,12 @@ def get_disk_profile(profile_id, timeout=30):
         pass
 
     try:
-        check_call_silent(['mount', USB_DISK_PATH, mount_dir])
+        check_call_silent([
+            'mount',
+            '-o', 'umask=0277,dmask=0277,fmask=0377',
+            USB_DISK_PATH,
+            mount_dir,
+        ])
 
         for file_name in os.listdir(mount_dir):
             if not file_name.endswith('.json'):
@@ -302,7 +307,12 @@ def set_disk_profile(profile_id, profile_iv, profile_key, timeout=30):
         pass
 
     try:
-        check_call_silent(['mount', USB_DISK_PATH, mount_dir])
+        check_call_silent([
+            'mount',
+            '-o', 'umask=0077,dmask=0077,fmask=0177',
+            USB_DISK_PATH,
+            mount_dir,
+        ])
 
         file_path = os.path.join(mount_dir, profile_id + '.json')
         with open(file_path, 'w') as profile_file:
