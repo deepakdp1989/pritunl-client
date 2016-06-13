@@ -44,13 +44,14 @@ class ProfileLinux(profile.Profile):
                 if self.status in ACTIVE_STATES:
                     self._set_status(ERROR)
 
-        args = ['pkexec', '/usr/bin/pritunl-client-pk-%s' % mode, self.path]
+        args = ['pkexec', '/usr/bin/pritunl-client-pk-%s' % mode]
 
+        env = {'VPN_CONF': self.get_vpn_conf()}
         if passwd:
-            args.append(self.passwd_path)
+            env['VPN_PASSWORD'] = passwd
 
-        self._run_ovpn(status_callback, connect_callback, passwd,
-            args, on_exit)
+        self._run_ovpn(status_callback, connect_callback,
+            args, on_exit, env=env)
 
     def _start_autostart(self, status_callback, connect_callback):
         self._start(status_callback, connect_callback, None, AUTOSTART)
