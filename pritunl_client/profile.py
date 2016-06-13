@@ -198,15 +198,17 @@ class Profile(object):
 
         s_index = profile_data.find('<cert>')
         e_index = profile_data.find('</cert>')
-        if s_index < 0 or e_index < 0:
-            raise ValueError('Cant find cert')
-        cert = profile_data[s_index:e_index + 7] + '\n'
+        if s_index != -1 and e_index != -1:
+            cert = profile_data[s_index:e_index + 7] + '\n'
+        else:
+            cert = ''
 
         s_index = profile_data.find('<key>')
         e_index = profile_data.find('</key>')
-        if s_index < 0 or e_index < 0:
-            raise ValueError('Cant find key')
-        key = profile_data[s_index:e_index + 6] + '\n'
+        if s_index != -1 and e_index != -1:
+            key = profile_data[s_index:e_index + 6] + '\n'
+        else:
+            key = ''
 
         self.write_profile(data + tls_auth + cert + key)
 
