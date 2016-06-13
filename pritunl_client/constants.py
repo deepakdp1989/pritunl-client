@@ -23,7 +23,6 @@ LINUX_ETC_DIR = os.path.join(os.path.abspath(os.sep), 'etc', APP_NAME)
 TMP_DIR = os.path.join(os.path.abspath(os.sep), 'tmp')
 SOCK_PATH = os.path.join(TMP_DIR, 'pritunl_%s.sock' % uuid.uuid4().hex)
 USB_DISK_PATH = '/dev/disk/by-label/PRITUNL'
-USB_DISK_MOUNT_DIR = '/tmp'
 CONNECT_TIMEOUT = 30
 OVPN_START_TIMEOUT = 5
 OVPN_STOP_TIMEOUT = 5
