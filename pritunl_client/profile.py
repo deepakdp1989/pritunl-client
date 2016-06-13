@@ -318,8 +318,9 @@ class Profile(object):
                     sync_hash=self.sync_hash,
                 )
                 return
-            elif status_code == 200 and response.content:
-                self.update_profile(response.content)
+            elif status_code == 200:
+                if response.content:
+                    self.update_profile(response.content)
                 return
 
         if status_code is not None and status_code != 200:
