@@ -366,10 +366,20 @@ class Profile(object):
             self._set_status(TIMEOUT_ERROR)
             self.stop(silent=True)
 
-        def poll_thread():
+        def stderr_poll_thread():
+            while True:
+                line = process.stderr.readline()
+                if not line:
+                    if process.poll() is not None:
+                        break
+                    else:
+                        continue
+                print line.strip()
+                with open(self.log_path, 'a') as log_file:
+                    log_file.write(line)
+
+        def stdout_poll_thread():
             started = False
-            with open(self.log_path, 'w') as _:
-                pass
             while True:
                 line = process.stdout.readline()
                 if not line:
@@ -400,7 +410,14 @@ class Profile(object):
 
             on_exit(data, process.returncode)
 
-        thread = threading.Thread(target=poll_thread)
+        with open(self.log_path, 'w') as _:
+            pass
+
+        thread = threading.Thread(target=stderr_poll_thread)
+        thread.daemon = True
+        thread.start()
+
+        thread = threading.Thread(target=stdout_poll_thread)
         thread.daemon = True
         thread.start()
 
