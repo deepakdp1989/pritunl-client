@@ -20,7 +20,15 @@
 ## You might need to set the path manually here, i.e.
 RESOLVCONF=`which resolvconf`
 if [[ -z "$RESOLVCONF" ]]; then
-  RESOLVCONF=/usr/bin/resolvconf
+  if [ -x /usr/sbin/resolvconf ]; then
+    RESOLVCONF=/sbin/resolvconf
+  elif [ -x /usr/bin/resolvconf ]; then
+    RESOLVCONF=/usr/bin/resolvconf
+  elif [ -x /sbin/resolvconf ]; then
+    RESOLVCONF=/sbin/resolvconf
+  else
+    RESOLVCONF=/bin/resolvconf
+  fi
 fi
 
 [ -x "$RESOLVCONF" ] || exit 0
