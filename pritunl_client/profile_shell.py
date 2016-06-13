@@ -21,8 +21,12 @@ class ProfileShell(profile.Profile):
             args.append('--auth-user-pass')
             args.append(self.passwd_path)
 
-        self._run_ovpn(status_callback, connect_callback, passwd,
-            args, on_exit)
+            with open(self.passwd_path, 'w') as passwd_file:
+                os.chmod(self.passwd_path, 0600)
+                passwd_file.write('pritunl_client\n')
+                passwd_file.write('%s\n' % passwd)
+
+        self._run_ovpn(status_callback, connect_callback, args, on_exit)
 
     def _start_autostart(self, status_callback, connect_callback):
         self._start(status_callback, connect_callback, None)
