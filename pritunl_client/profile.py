@@ -343,8 +343,8 @@ class Profile(object):
 
         return data
 
-    def _run_ovpn(self, status_callback, connect_callback, passwd,
-            args, on_exit, **kwargs):
+    def _run_ovpn(self, status_callback, connect_callback,
+            args, on_exit, env=None, **kwargs):
         data = {
             'status': CONNECTING,
             'process': None,
@@ -355,14 +355,19 @@ class Profile(object):
         _connections[self.id] = data
         self._set_status(CONNECTING, connect_event=False)
 
-        if passwd:
-            with open(self.passwd_path, 'w') as passwd_file:
-                os.chmod(self.passwd_path, 0600)
-                passwd_file.write('pritunl_client\n')
-                passwd_file.write('%s\n' % passwd)
+        if env:
+            process_env = os.environ.copy()
+            process_env.update(env)
+        else:
+            process_env = None
 
-        process = subprocess.Popen(args,
-            stdout=subprocess.PIPE, stderr=subprocess.PIPE, **kwargs)
+        process = subprocess.Popen(
+            args,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            env=process_env,
+            **kwargs
+        )
         data['process'] = process
         self.pid = process.pid
         self.commit()
