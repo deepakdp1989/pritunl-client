@@ -356,16 +356,16 @@ class Profile(object):
         self._set_status(CONNECTING, connect_event=False)
 
         if env:
-            process_env = os.environ.copy()
-            process_env.update(env)
-        else:
-            process_env = None
+            env_path = os.path.join(TMP_DIR, uuid.uuid4().hex)
+            with open(env_path, 'w') as env_file:
+                os.chmod(env_path, 0600)
+                env_file.write(json.dumps(env))
+            args.append('--env=' + env_path)
 
         process = subprocess.Popen(
             args,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
-            env=process_env,
             **kwargs
         )
         data['process'] = process
