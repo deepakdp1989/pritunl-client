@@ -404,8 +404,8 @@ class Profile(object):
                 with open(self.log_path, 'a') as log_file:
                     log_file.write(line)
                 if not started:
-                    data['started'] = True
                     started = True
+                    data['started'] = True
                     thread = threading.Thread(target=connect_thread)
                     thread.daemon = True
                     thread.start()
