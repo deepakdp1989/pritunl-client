@@ -316,7 +316,8 @@ class App(object):
                 dialog.set_icon(utils.get_logo())
                 dialog.set_message('Format USB device')
                 dialog.set_message_secondary(
-                    'Are you sure you want to format the selected device')
+                    'Are you sure you want to FORMAT AND ERASE ALL DATA ' +
+                    'on the selected device')
                 response = dialog.run()
                 dialog.destroy()
 
