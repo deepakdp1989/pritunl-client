@@ -222,24 +222,38 @@ def client_shell():
 
     cli()
 
+def get_env():
+    env_path = sys.argv[-1]
+    if not env_path.startswith('--env='):
+        return {}
+    env_path = env_path[6:]
+
+    with open(env_path, 'r') as env_file:
+        env = json.loads(env_file.read())
+
+    os.remove(env_path)
+    return env
+
 def _pk_start(autostart=False):
-    regex = r'(?:/pritunl_client/profiles/[a-z0-9]+\.ovpn)$'
-    if not re.search(regex, sys.argv[1]):
-        raise ValueError('Profile must be in home directory')
+    env = get_env()
+    conf_data = env.get('VPN_CONF')
+    passwd = env.get('VPN_PASSWORD')
+
     if autostart:
-        with open(sys.argv[1], 'r') as profile_file:
-            profile_hash = hashlib.sha1(profile_file.read()).hexdigest()
+        profile_hash = hashlib.sha1(conf_data).hexdigest()
         profile_hash_path = os.path.join(os.path.abspath(os.sep),
             'etc', 'pritunl_client', profile_hash)
         if not os.path.exists(profile_hash_path):
             raise ValueError('Profile not authorized to autostart')
 
-    args = ['openvpn', '--config', sys.argv[1]]
+    conf_path = os.path.join('/tmp', uuid.uuid4().hex + '.conf')
+    pass_path = None
+    args = ['openvpn', '--config', conf_path]
 
-    if len(sys.argv) > 2:
-        os.chown(sys.argv[2], os.getuid(), os.getgid())
+    if passwd:
+        pass_path = os.path.join('/tmp', uuid.uuid4().hex + '.pass')
         args.append('--auth-user-pass')
-        args.append(sys.argv[2])
+        args.append(pass_path)
 
     script_path = os.path.join(SHARE_DIR, 'update-resolv-conf.sh')
 
@@ -248,15 +262,38 @@ def _pk_start(autostart=False):
     args.extend(['--down', script_path])
 
     try:
+        with open(conf_path, 'w') as conf_file:
+            os.chmod(conf_path, 0600)
+            conf_file.write(conf_data)
+        if passwd:
+            with open(pass_path, 'w') as passwd_file:
+                os.chmod(pass_path, 0600)
+                passwd_file.write('pritunl_client\n')
+                passwd_file.write('%s\n' % passwd)
+
         process = subprocess.Popen(args)
         def sig_handler(signum, frame):
             process.send_signal(signum)
         signal.signal(signal.SIGINT, sig_handler)
         signal.signal(signal.SIGTERM, sig_handler)
+
+        time.sleep(1)
+        os.remove(conf_path)
+        if passwd:
+            os.remove(pass_path)
+
         sys.exit(process.wait())
     finally:
-        if len(sys.argv) > 2:
-            os.remove(sys.argv[2])
+        try:
+            os.remove(conf_path)
+        except:
+            pass
+        if passwd:
+            try:
+                os.remove(pass_path)
+            except:
+                pass
+
 
 def pk_start():
     _pk_start(False)
