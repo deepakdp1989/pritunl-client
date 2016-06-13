@@ -335,6 +335,14 @@ class Profile(object):
                 sync_hash=self.sync_hash,
             )
 
+    def get_vpn_conf(self):
+        data = ''
+
+        with open(self.path, 'r') as profile_file:
+            data += profile_file.read()
+
+        return data
+
     def _run_ovpn(self, status_callback, connect_callback, passwd,
             args, on_exit, **kwargs):
         data = {
