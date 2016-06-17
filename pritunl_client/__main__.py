@@ -240,7 +240,7 @@ def _pk_start(autostart=False):
     passwd = env.get('VPN_PASSWORD')
 
     if autostart:
-        profile_hash = hashlib.sha1(conf_data).hexdigest()
+        profile_hash = hashlib.sha512(conf_data).hexdigest()
         profile_hash_path = os.path.join(os.path.abspath(os.sep),
             'etc', 'pritunl_client', profile_hash)
         if not os.path.exists(profile_hash_path):
