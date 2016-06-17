@@ -354,8 +354,9 @@ def pk_get_disk_profile():
 
 def pk_set_disk_profile():
     from pritunl_client import utils
+    env = get_env()
     print json.dumps(utils.set_disk_profile(
-        sys.argv[1],
-        os.environ.get('PROFILE_IV'),
-        os.environ.get('PROFILE_KEY'),
+        env.get('PROFILE_ID'),
+        env.get('PROFILE_IV'),
+        env.get('PROFILE_KEY'),
     ))
