@@ -64,7 +64,7 @@ class App(object):
             menu_item.set_callback(self.on_delete_profile, prfl.id)
             profile_menu.add_item(menu_item)
 
-            if not prfl.auth_passwd:
+            if not prfl.auth_passwd and not prfl.encrypted:
                 menu_item = interface.CheckMenuItem()
                 menu_item.set_label('Autostart')
                 menu_item.set_active(prfl.autostart)
