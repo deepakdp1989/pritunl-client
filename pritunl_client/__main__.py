@@ -303,14 +303,17 @@ def pk_autostart():
 
 def pk_stop():
     pid = int(sys.argv[1])
+
     cmdline_path = '/proc/%s/cmdline' % pid
-    regex = r'/pritunl_client/profiles/[a-z0-9]+\.ovpn'
     if not os.path.exists(cmdline_path):
         return
+
     with open('/proc/%s/cmdline' % pid, 'r') as cmdline_file:
         cmdline = cmdline_file.read().strip().strip('\x00')
-        if not re.search(regex, cmdline):
+        if not 'pritunl-client-pk-start' in cmdline and \
+                not 'pritunl-client-pk-autostart' in cmdline:
             raise ValueError('Not a pritunl client process')
+
     os.kill(pid, signal.SIGTERM)
     for i in xrange(int(5 / 0.1)):
         time.sleep(0.1)
