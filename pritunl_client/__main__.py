@@ -322,11 +322,9 @@ def pk_stop():
         os.kill(pid, signal.SIGTERM)
 
 def pk_set_autostart():
-    regex = r'(?:/pritunl_client/profiles/[a-z0-9]+\.ovpn)$'
-    if not re.search(regex, sys.argv[1]):
-        raise ValueError('Profile must be in home directory')
-    with open(sys.argv[1], 'r') as profile_file:
-        profile_hash = hashlib.sha1(profile_file.read()).hexdigest()
+    env = get_env()
+    conf_data = env.get('VPN_CONF')
+    profile_hash = hashlib.sha512(conf_data).hexdigest()
     etc_dir = os.path.join(os.path.abspath(os.sep),
         'etc', 'pritunl_client')
     if not os.path.exists(etc_dir):
