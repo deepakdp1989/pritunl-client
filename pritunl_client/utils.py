@@ -336,6 +336,6 @@ def set_disk_profile(profile_id, profile_iv, profile_key, timeout=30):
 def write_env(env_data):
     env_path = os.path.join(TMP_DIR, uuid.uuid4().hex)
     with open(env_path, 'w') as env_file:
-        os.chmod(env_path, 0600)
+        os.chmod(env_path, 0200)
         env_file.write(json.dumps(env_data))
     return '--env=' + env_path
