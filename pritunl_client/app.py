@@ -73,10 +73,11 @@ class App(object):
                     prfl.id)
                 profile_menu.add_item(menu_item)
 
-            menu_item = interface.MenuItem()
-            menu_item.set_label('Setup USB Key')
-            menu_item.set_callback(self.on_setup_usb_key, prfl.id)
-            profile_menu.add_item(menu_item)
+            if not prfl.encrypted:
+                menu_item = interface.MenuItem()
+                menu_item.set_label('Setup USB Key')
+                menu_item.set_callback(self.on_setup_usb_key, prfl.id)
+                profile_menu.add_item(menu_item)
 
             menu.add_item(profile_menu)
 
