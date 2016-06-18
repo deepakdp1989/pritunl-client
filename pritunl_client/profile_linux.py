@@ -114,8 +114,7 @@ class ProfileLinux(profile.Profile):
         retry += 1
         process = subprocess.Popen(['pkexec',
             '/usr/bin/pritunl-client-pk-clear-autostart',
-            self._get_profile_hash()], stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE)
+            self._get_profile_hash()])
         process.wait()
 
         # Canceled
