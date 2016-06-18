@@ -264,11 +264,9 @@ def get_disk_profile(profile_id, timeout=3):
         ])
 
         for file_name in os.listdir(mount_dir):
-            if not file_name.endswith('.json'):
+            if not file_name.endswith('.json') or \
+                    profile_id != file_name.split('.')[0]:
                 continue
-
-            if profile_id != file_name.split('.')[0]:
-                return
 
             file_path = os.path.join(mount_dir, file_name)
             try:
