@@ -1,6 +1,7 @@
 from constants import *
 from exceptions import *
 from pritunl_client import profile
+from pritunl_client import utils
 
 import os
 import time
@@ -89,9 +90,11 @@ class ProfileLinux(profile.Profile):
 
     def _set_profile_autostart(self, retry=0):
         retry += 1
-        process = subprocess.Popen(['pkexec',
-            '/usr/bin/pritunl-client-pk-set-autostart', self.path],
-            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        process = subprocess.Popen([
+            'pkexec',
+            '/usr/bin/pritunl-client-pk-set-autostart',
+            utils.write_env({'VPN_CONF': self.get_vpn_conf()}),
+        ])
         process.wait()
 
         # Canceled
