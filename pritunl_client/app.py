@@ -347,6 +347,7 @@ class App(object):
 
                 def refresh():
                     while not interrupt:
+                        time.sleep(0.025)
                         devices = profile.get_usb_devices()
                         if devices:
                             refresh_devices.append(devices)
