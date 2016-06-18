@@ -102,6 +102,7 @@ class ProfileLinux(profile.Profile):
         # Random error, retry
         elif process.returncode == -15 and retry < 10:
             time.sleep(0.1)
+            process = None
             return self._set_profile_autostart(retry=retry)
         elif process.returncode != 0:
             raise ProcessCallError(
