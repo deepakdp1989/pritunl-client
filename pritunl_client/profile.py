@@ -527,3 +527,38 @@ def format_usb_device(device):
         ])
     else:
         pass
+
+def write_usb_key(id, iv, key):
+    iv = base64.b64encode(iv)
+    key = base64.b64encode(key)
+
+    if PLATFORM == LINUX or PLATFORM == SHELL:
+        utils.check_output([
+            'pkexec',
+            '/usr/bin/pritunl-client-pk-set-disk-profile',
+            utils.write_env({
+                'PROFILE_ID': id,
+                'PROFILE_IV': iv,
+                'PROFILE_KEY': key,
+            }),
+        ])
+    else:
+        pass
+
+def get_usb_key(id):
+    if PLATFORM == LINUX or PLATFORM == SHELL:
+        data = utils.check_output([
+            'pkexec',
+            '/usr/bin/pritunl-client-pk-get-disk-profile',
+            utils.write_env({
+                'PROFILE_ID': id,
+            }),
+        ])
+        data = json.loads(data)
+
+        iv = base64.b64decode(data['iv'])
+        key = base64.b64decode(data['key'])
+
+        return iv, key
+    else:
+        pass
