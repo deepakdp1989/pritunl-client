@@ -135,6 +135,71 @@ class App(object):
         dialog.run()
         dialog.destroy()
 
+    def wait_for_usb_insert(self):
+        interrupt = False
+        has_device = []
+        dialog = interface.MessageDialog()
+
+        def refresh():
+            while not interrupt:
+                time.sleep(0.025)
+                if profile.has_usb_device():
+                    has_device.append(True)
+                    try:
+                        dialog.close()
+                    except:
+                        pass
+                    return
+
+        thread = threading.Thread(target=refresh)
+        thread.daemon = True
+        thread.start()
+
+        dialog.set_type(MESSAGE_LOADING)
+        dialog.set_buttons(BUTTONS_CANCEL)
+        dialog.set_title(APP_NAME_FORMATED)
+        dialog.set_icon(utils.get_logo())
+        dialog.set_message('Insert USB key...')
+        dialog.set_message_secondary(
+            'Insert Pritunl USB key to unlock profile')
+        dialog.run()
+        dialog.destroy()
+
+        return bool(has_device)
+
+    def wait_for_usb_remove(self):
+        while True:
+            interrupt = False
+            not_has_device = []
+            dialog = interface.MessageDialog()
+
+            def refresh():
+                while not interrupt:
+                    time.sleep(0.025)
+                    if not profile.has_usb_device():
+                        not_has_device.append(True)
+                        try:
+                            dialog.close()
+                        except:
+                            pass
+                        return
+
+            thread = threading.Thread(target=refresh)
+            thread.daemon = True
+            thread.start()
+
+            dialog.set_type(MESSAGE_LOADING)
+            dialog.set_buttons(BUTTONS_CANCEL)
+            dialog.set_title(APP_NAME_FORMATED)
+            dialog.set_icon(utils.get_logo())
+            dialog.set_message('Remove USB key...')
+            dialog.set_message_secondary('Remove Pritunl USB key')
+            dialog.run()
+            dialog.destroy()
+
+            if bool(not_has_device):
+                return
+
     def on_status_change(self):
         conn_count = 0
         active_count = 0
