@@ -406,19 +406,36 @@ class App(object):
                 dialog.set_icon(utils.get_logo())
                 dialog.set_message('Format USB device')
                 dialog.set_message_secondary(
-                    'Are you sure you want to FORMAT AND ERASE ALL DATA ' +
-                    'on the selected device')
+                    'Insert existing Pritunl USB key or select a USB ' +
+                    'device below to setup a new USB key. This will FORMAT ' +
+                    'AND ERASE ALL DATA on the selected device.')
                 response = dialog.run()
                 dialog.destroy()
+                interrupt = True
 
-                if response is None:
-                    return
+                if not has_device:
+                    if response is None:
+                        return
 
-                device = devices_map[response]
-                profile.format_usb_device(device)
-                time.sleep(1)
+                    device = devices_map[response]
+                    profile.format_usb_device(device)
+                    time.sleep(1)
 
-        print profile.has_usb_device()
+        prfl.encrypt_vpv_conf()
+        self.wait_for_usb_remove()
+
+        dialog = interface.MessageDialog()
+        dialog.set_type(MESSAGE_INFO)
+        dialog.set_buttons(BUTTONS_OK)
+        dialog.set_title(APP_NAME_FORMATED)
+        dialog.set_icon(utils.get_logo())
+        dialog.set_message('USB key setup for %s complete' % prfl.name)
+        dialog.set_message_secondary(
+            'The profile has been sucessfully protected with USB key')
+        dialog.run()
+        dialog.destroy()
+
+        self.update_menu()
 
     def on_autostart_profile(self, profile_id):
         prfl = profile.Profile.get_profile(profile_id)
