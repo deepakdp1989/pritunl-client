@@ -315,7 +315,6 @@ def set_disk_profile(profile_id, profile_iv, profile_key, timeout=30):
         file_path = os.path.join(mount_dir, profile_id + '.json')
         with open(file_path, 'w') as profile_file:
             profile_file.write(json.dumps({
-                'version': 1,
                 'iv': profile_iv,
                 'key': profile_key,
             }))
