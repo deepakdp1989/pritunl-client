@@ -67,8 +67,7 @@ class ProfileLinux(profile.Profile):
             data['process'] = None
             if process and not process.poll():
                 stop_process = subprocess.Popen(['pkexec',
-                    '/usr/bin/pritunl-client-pk-stop', str(process.pid)],
-                    stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                    '/usr/bin/pritunl-client-pk-stop', str(process.pid)])
                 stop_process.wait()
 
                 # Canceled
