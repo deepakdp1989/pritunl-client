@@ -421,11 +421,7 @@ class Profile(object):
         self._set_status(CONNECTING, connect_event=False)
 
         if env:
-            env_path = os.path.join(TMP_DIR, uuid.uuid4().hex)
-            with open(env_path, 'w') as env_file:
-                os.chmod(env_path, 0600)
-                env_file.write(json.dumps(env))
-            args.append('--env=' + env_path)
+            args.append(utils.write_env(env))
 
         process = subprocess.Popen(
             args,
