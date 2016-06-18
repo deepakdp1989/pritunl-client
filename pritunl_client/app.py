@@ -378,8 +378,25 @@ class App(object):
                 devices = refresh_devices[0]
 
             if not profile.has_usb_device():
+                interrupt = False
                 devices_map = []
+                has_device = []
                 dialog = interface.SelectDialog()
+
+                def refresh():
+                    while not interrupt:
+                        time.sleep(0.025)
+                        if profile.has_usb_device():
+                            has_device.append(True)
+                            try:
+                                dialog.close()
+                            except:
+                                pass
+                            return
+
+                thread = threading.Thread(target=refresh)
+                thread.daemon = True
+                thread.start()
 
                 for usb_device, usb_name in devices.items():
                     devices_map.append(usb_device)
