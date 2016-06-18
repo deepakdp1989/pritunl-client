@@ -269,6 +269,12 @@ class App(object):
                 if passwd is None:
                     return
 
+        if prfl.encrypted:
+            if not self.wait_for_usb_insert():
+                return
+            prfl.decrypt_vpv_conf()
+            self.wait_for_usb_remove()
+
         dialog = interface.MessageDialog()
         dialog.set_type(MESSAGE_LOADING)
         dialog.set_buttons(BUTTONS_CANCEL)
