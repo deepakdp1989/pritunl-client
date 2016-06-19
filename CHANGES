@@ -1,6 +1,10 @@
 pritunl-client changelog
 ========================
 
+<%= version %>
+
+Add USB key support
+
 Version 1.0.955.34 2016-04-24
 -----------------------------
 
