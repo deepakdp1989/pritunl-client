@@ -258,6 +258,7 @@ def _pk_start(autostart=False):
     script_path = os.path.join(SHARE_DIR, 'update-resolv-conf.sh')
 
     args.extend(['--script-security', '2'])
+    args.append('--up-restart')
     args.extend(['--up', script_path])
     args.extend(['--down', script_path])
 
