@@ -1,7 +1,8 @@
 pritunl-client changelog
 ========================
 
-<%= version %>
+Version 1.0.1039.33 2016-07-17
+------------------------------
 
 Add USB key support
 Improve reconnection script
