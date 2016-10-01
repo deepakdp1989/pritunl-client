@@ -59,7 +59,7 @@ def auth_request(method, host, path, token, secret,
         method.upper(), path] + ([data] if data else []))
 
     auth_signature = base64.b64encode(hmac.new(
-        secret.encode(), auth_string, hashlib.sha256).digest())
+        secret.encode(), auth_string, hashlib.sha512).digest())
     auth_headers = {
         'Auth-Token': token,
         'Auth-Timestamp': auth_timestamp,

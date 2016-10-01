@@ -15,6 +15,8 @@ import threading
 import tarfile
 import requests
 import base64
+import hashlib
+import hmac
 import Crypto.Cipher.AES
 import Crypto.Random
 
@@ -156,37 +158,44 @@ class Profile(object):
 
     def _parse_profile(self, data):
         json_data = ''
+        json_found = None
+        profile_data = ''
 
         for line in data.splitlines():
-            if line.startswith('#'):
+            if json_found is None and line == '#{':
+                json_found = True
+
+            if json_found and line.startswith('#'):
+                if line == '#}':
+                    json_found = False
                 json_data += line[1:].strip()
             else:
-                break
+                profile_data += line + '\n'
 
         try:
             conf_data = json.loads(json_data)
         except ValueError:
             conf_data = {}
 
-        return conf_data
+        return profile_data, conf_data
 
     def write_profile(self, profile_data):
-        conf_data = self._parse_profile(profile_data)
+        profile_data, conf_data = self._parse_profile(profile_data)
         with open(self.path, 'w') as profile_file:
             os.chmod(self.path, 0600)
             profile_file.write(profile_data)
 
-        self.user_name = conf_data.get('user')
-        self.org_name = conf_data.get('organization')
-        self.server_name = conf_data.get('server')
-        self.user_id = conf_data.get('user_id')
-        self.org_id = conf_data.get('organization_id')
-        self.server_id = conf_data.get('server_id')
-        self.password_mode = conf_data.get('password_mode')
-        self.sync_hash = conf_data.get('sync_hash')
-        self.sync_token = conf_data.get('sync_token')
-        self.sync_secret = conf_data.get('sync_secret')
-        self.sync_hosts = conf_data.get('sync_hosts', [])
+        self.user_name = conf_data.get('user', self.user_name)
+        self.org_name = conf_data.get('organization', self.org_name)
+        self.server_name = conf_data.get('server', self.server_name)
+        self.user_id = conf_data.get('user_id', self.user_id)
+        self.org_id = conf_data.get('organization_id', self.org_id)
+        self.server_id = conf_data.get('server_id', self.server_id)
+        self.password_mode = conf_data.get('password_mode', self.password_mode)
+        self.sync_hash = conf_data.get('sync_hash', self.sync_hash)
+        self.sync_token = conf_data.get('sync_token', self.sync_token)
+        self.sync_secret = conf_data.get('sync_secret', self.sync_secret)
+        self.sync_hosts = conf_data.get('sync_hosts', self.sync_hosts or [])
         self.auth_passwd = 'auth-user-pass' in profile_data
         self.commit()
 
@@ -278,7 +287,7 @@ class Profile(object):
         for i, sync_host in enumerate(self.sync_hosts):
             try:
                 response = utils.auth_request('get', sync_host,
-                    '/key/%s/%s/%s/%s' % (
+                    '/key/sync/%s/%s/%s/%s' % (
                         self.org_id,
                         self.user_id,
                         self.server_id,
@@ -328,8 +337,18 @@ class Profile(object):
                 )
                 return
             elif status_code == 200:
-                if response.content:
-                    self.update_profile(response.content)
+                data = response.json()
+                if not data.get('signature') or not data.get('conf'):
+                    return
+
+                conf_signature = base64.b64encode(hmac.new(
+                    self.sync_secret.encode(), data.get('conf'),
+                    hashlib.sha512).digest())
+
+                if conf_signature != data.get('signature'):
+                    return
+
+                self.update_profile(data.get('conf'))
                 return
 
         if status_code is not None and status_code != 200:
