@@ -336,3 +336,6 @@ def write_env(env_data):
         os.chmod(env_path, 0200)
         env_file.write(json.dumps(env_data))
     return '--env=' + env_path
+
+def generate_secret():
+    return re.sub(r'[\W_]+', '', base64.b64encode(os.urandom(64)))[:32]
