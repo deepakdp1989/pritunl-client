@@ -29,6 +29,15 @@ def client_shell():
     constants.set_shell()
     from pritunl_client import click
 
+    def get_auth_headers(add_headers=None):
+        response = requests.get('http://localhost:9797/token')
+        headers = {
+            'Auth-Token': response.content,
+        }
+        if add_headers:
+            headers.update(add_headers)
+        return headers
+
     @click.group()
     def cli():
         pass
@@ -67,6 +76,7 @@ def client_shell():
     def list_cmd():
         response = requests.get(
             'http://localhost:9797/list',
+            headers=get_auth_headers(),
         )
 
         if response.status_code == 200:
@@ -93,9 +103,9 @@ def client_shell():
 
             response = requests.post(
                 'http://localhost:9797/import',
-                headers={
+                headers=get_auth_headers({
                     'Content-type': 'application/json',
-                },
+                }),
                 data=json.dumps(data),
             )
 
@@ -116,6 +126,7 @@ def client_shell():
         for profile_id in profile_ids:
             response = requests.delete(
                 'http://localhost:9797/remove/%s' % profile_id,
+                headers=get_auth_headers(),
             )
 
             if response.status_code == 200:
@@ -150,7 +161,7 @@ def client_shell():
 
             response = requests.put(
                 'http://localhost:9797/start/%s' % profile_id,
-                headers=headers,
+                headers=get_auth_headers(headers),
                 data=data,
             )
 
@@ -171,6 +182,7 @@ def client_shell():
         for profile_id in profile_ids:
             response = requests.put(
                 'http://localhost:9797/stop/%s' % profile_id,
+                headers=get_auth_headers(),
             )
 
             if response.status_code == 200:
@@ -191,6 +203,7 @@ def client_shell():
         for profile_id in profile_ids:
             response = requests.put(
                 'http://localhost:9797/enable/%s' % profile_id,
+                headers=get_auth_headers(),
             )
 
             if response.status_code == 200:
@@ -211,6 +224,7 @@ def client_shell():
         for profile_id in profile_ids:
             response = requests.put(
                 'http://localhost:9797/disable/%s' % profile_id,
+                headers=get_auth_headers(),
             )
 
             if response.status_code == 200:

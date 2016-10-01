@@ -10,6 +10,8 @@ import threading
 import json
 import httplib
 
+auth_token = utils.generate_secret()
+
 class ThreadingHTTPServer(SocketServer.ThreadingMixIn,
         BaseHTTPServer.HTTPServer):
     pass
@@ -25,6 +27,10 @@ class Request(BaseHTTPServer.BaseHTTPRequestHandler):
 
     def do_PUT(self):
         try:
+            if self.headers.get('Auth-Token') != auth_token:
+                self.send_response(401)
+                return
+
             self.args = self.path.split('/')
 
             data_len = int(self.headers.get('Content-Length', 0))
@@ -52,6 +58,10 @@ class Request(BaseHTTPServer.BaseHTTPRequestHandler):
 
     def do_POST(self):
         try:
+            if self.headers.get('Auth-Token') != auth_token:
+                self.send_response(401)
+                return
+
             self.args = self.path.split('/')
 
             data_len = int(self.headers.get('Content-Length', 0))
@@ -71,6 +81,10 @@ class Request(BaseHTTPServer.BaseHTTPRequestHandler):
 
     def do_DELETE(self):
         try:
+            if self.headers.get('Auth-Token') != auth_token:
+                self.send_response(401)
+                return
+
             self.args = self.path.split('/')
 
             data_len = int(self.headers.get('Content-Length', 0))
@@ -92,12 +106,21 @@ class Request(BaseHTTPServer.BaseHTTPRequestHandler):
         try:
             self.args = self.path.split('/')
 
-            if self.args[1] == 'list':
+            if self.args[1] == 'token':
+                self.do_token()
+            elif self.args[1] == 'list':
+                if self.headers.get('Auth-Token') != auth_token:
+                    self.send_response(401)
+                    return
+
                 self.do_list()
             else:
                 self.send_response(404)
         except Exception as exception:
             self.send_text_response(str(exception), 500)
+
+    def do_token(self):
+        self.send_text_response(auth_token, 200)
 
     def do_import(self):
         profile_path = self.data.get('profile_path')
