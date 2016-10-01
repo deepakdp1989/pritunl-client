@@ -1,7 +1,8 @@
 pritunl-client changelog
 ========================
 
-<%= version %>
+Version 1.0.1115.97 2016-10-01
+------------------------------
 
 Improve client conf sync
 
