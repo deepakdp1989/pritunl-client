@@ -37,10 +37,10 @@ class ProfileLinux(profile.Profile):
             if return_code == 126:
                 self._set_status(ENDED)
             # Random error, retry
-            elif return_code == -15 and not data['started'] and retry < 10:
+            elif return_code == -15 and not data['started'] and retry < 200:
                 data['status_callback'] = None
                 data['connect_callback'] = None
-                time.sleep(0.1)
+                time.sleep(0.05)
                 self._start(status_callback, connect_callback, passwd, mode,
                     retry=retry)
             else:
@@ -74,8 +74,9 @@ class ProfileLinux(profile.Profile):
                 if stop_process.returncode == 126:
                     return
                 # Random error, retry
-                elif stop_process.returncode == -15 and retry < 10:
-                    time.sleep(0.1)
+                elif stop_process.returncode == -15 and retry < 200:
+                    time.sleep(0.05)
+                    stop_process = None
                     self._stop(silent=silent, retry=retry)
                     return
                 elif stop_process.returncode != 0:
@@ -100,8 +101,8 @@ class ProfileLinux(profile.Profile):
         if process.returncode == 126:
             return False
         # Random error, retry
-        elif process.returncode == -15 and retry < 10:
-            time.sleep(0.1)
+        elif process.returncode == -15 and retry < 200:
+            time.sleep(0.05)
             process = None
             return self._set_profile_autostart(retry=retry)
         elif process.returncode != 0:
@@ -121,8 +122,9 @@ class ProfileLinux(profile.Profile):
         if process.returncode == 126:
             return False
         # Random error, retry
-        elif process.returncode == -15 and retry < 10:
-            time.sleep(0.1)
+        elif process.returncode == -15 and retry < 200:
+            time.sleep(0.05)
+            process = None
             return self._clear_profile_autostart(retry=retry)
         elif process.returncode != 0:
             raise ProcessCallError(
@@ -138,8 +140,9 @@ class ProfileLinux(profile.Profile):
         process.wait()
 
         # Random error, retry
-        if process.returncode == -15 and retry < 10:
-            time.sleep(0.1)
+        if process.returncode == -15 and retry < 200:
+            time.sleep(0.05)
+            process = None
             self._kill_pid(pid, retry=retry)
 
     def commit(self):
