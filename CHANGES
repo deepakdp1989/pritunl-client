@@ -1,6 +1,10 @@
 pritunl-client changelog
 ========================
 
+<%= version %>
+
+Fix startup error on ubuntu
+
 Version 1.0.1115.97 2016-10-01
 ------------------------------
 
