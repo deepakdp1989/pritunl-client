@@ -431,7 +431,7 @@ class Profile(object):
         self.decrypted_data = key_data.strip('\00')
 
     def _run_ovpn(self, status_callback, connect_callback,
-            args, on_exit, env=None, **kwargs):
+            args, on_exit, retry, env=None, **kwargs):
         data = {
             'status': CONNECTING,
             'process': None,
@@ -445,12 +445,36 @@ class Profile(object):
         if env:
             args.append(utils.write_env(env))
 
-        process = subprocess.Popen(
-            args,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
-            **kwargs
-        )
+        if retry:
+            for _ in xrange(250):
+                process = subprocess.Popen(
+                    args,
+                    stdout=subprocess.PIPE,
+                    stderr=subprocess.PIPE,
+                    **kwargs
+                )
+
+                for _ in xrange(150):
+                    time.sleep(0.01)
+                    returncode = process.poll()
+                    if returncode is not None:
+                        break
+
+                print returncode
+
+                if returncode == -15:
+                    print 'retry'
+                    continue
+                else:
+                    break
+        else:
+            process = subprocess.Popen(
+                args,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                **kwargs
+            )
+
         data['process'] = process
         self.pid = process.pid
         self.commit()
@@ -505,7 +529,7 @@ class Profile(object):
             except:
                 pass
 
-            on_exit(data, process.returncode)
+            on_exit(process.returncode)
 
         with open(self.log_path, 'w') as _:
             pass
