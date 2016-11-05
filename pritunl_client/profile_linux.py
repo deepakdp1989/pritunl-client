@@ -37,7 +37,7 @@ class ProfileLinux(profile.Profile):
             if return_code == 126:
                 self._set_status(ENDED)
             # Random error, retry
-            elif return_code == -15 and not data['started'] and retry < 200:
+            elif return_code == -15 and not data['started'] and retry < 250:
                 data['status_callback'] = None
                 data['connect_callback'] = None
                 time.sleep(0.05)
@@ -74,7 +74,7 @@ class ProfileLinux(profile.Profile):
                 if stop_process.returncode == 126:
                     return
                 # Random error, retry
-                elif stop_process.returncode == -15 and retry < 200:
+                elif stop_process.returncode == -15 and retry < 250:
                     time.sleep(0.05)
                     stop_process = None
                     self._stop(silent=silent, retry=retry)
@@ -101,7 +101,7 @@ class ProfileLinux(profile.Profile):
         if process.returncode == 126:
             return False
         # Random error, retry
-        elif process.returncode == -15 and retry < 200:
+        elif process.returncode == -15 and retry < 250:
             time.sleep(0.05)
             process = None
             return self._set_profile_autostart(retry=retry)
@@ -122,7 +122,7 @@ class ProfileLinux(profile.Profile):
         if process.returncode == 126:
             return False
         # Random error, retry
-        elif process.returncode == -15 and retry < 200:
+        elif process.returncode == -15 and retry < 250:
             time.sleep(0.05)
             process = None
             return self._clear_profile_autostart(retry=retry)
@@ -140,7 +140,7 @@ class ProfileLinux(profile.Profile):
         process.wait()
 
         # Random error, retry
-        if process.returncode == -15 and retry < 200:
+        if process.returncode == -15 and retry < 250:
             time.sleep(0.05)
             process = None
             self._kill_pid(pid, retry=retry)
