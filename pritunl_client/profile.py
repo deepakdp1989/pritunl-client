@@ -282,6 +282,9 @@ class Profile(object):
     def _start(self, status_callback, connect_callback, passwd):
         raise NotImplementedError()
 
+    def _kill_pid(self, pid):
+        raise NotImplementedError()
+
     def sync_conf(self):
         status_code = None
         for i, sync_host in enumerate(self.sync_hosts):
@@ -518,7 +521,7 @@ class Profile(object):
     def stop(self, silent=False):
         self._stop(silent)
 
-    def _stop(self):
+    def _stop(self, silent):
         raise NotImplementedError()
 
     @classmethod
