@@ -1,2 +1,2 @@
-requests==2.10.0
+requests==2.11.1
 pycrypto>=2.6.1
