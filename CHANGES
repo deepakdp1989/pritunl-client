@@ -1,8 +1,7 @@
 pritunl-client changelog
 ========================
 
-Version 1.0.1150.11 2016-11-05
-------------------------------
+<%= version %>
 
 Improve connection speed
 Fix error when connecting
