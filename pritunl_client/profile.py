@@ -521,6 +521,7 @@ class Profile(object):
 
         if wait:
             for _ in xrange(300):
+                time.sleep(0.1)
                 if process.poll() is not None:
                     break
 
