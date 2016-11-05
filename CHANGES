@@ -1,6 +1,8 @@
 pritunl-client changelog
 ========================
 
+<%= version %>
+
 Improve connection speed
 Fix error when connecting
 
