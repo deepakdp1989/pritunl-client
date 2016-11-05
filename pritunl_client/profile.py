@@ -460,10 +460,7 @@ class Profile(object):
                     if returncode is not None:
                         break
 
-                print returncode
-
                 if returncode == -15:
-                    print 'retry'
                     continue
                 else:
                     break
