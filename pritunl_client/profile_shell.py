@@ -11,7 +11,7 @@ import signal
 
 class ProfileShell(profile.Profile):
     def _start(self, status_callback, connect_callback, passwd):
-        def on_exit(data, return_code):
+        def on_exit(return_code):
             if self.status in ACTIVE_STATES:
                 self._set_status(ERROR)
 
@@ -26,7 +26,7 @@ class ProfileShell(profile.Profile):
                 passwd_file.write('pritunl_client\n')
                 passwd_file.write('%s\n' % passwd)
 
-        self._run_ovpn(status_callback, connect_callback, args, on_exit)
+        self._run_ovpn(status_callback, connect_callback, args, on_exit, False)
 
     def _start_autostart(self, status_callback, connect_callback):
         self._start(status_callback, connect_callback, None)
