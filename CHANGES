@@ -1,6 +1,10 @@
 pritunl-client changelog
 ========================
 
+<%= version %>
+
+Fix issue with USB keys on debian
+
 Version 1.0.1150.12 2016-11-05
 ------------------------------
 
