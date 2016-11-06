@@ -2,7 +2,7 @@
 <!DOCTYPE policyconfig PUBLIC "-//freedesktop//DTD PolicyKit Policy Configuration 1.0//EN" "http://www.freedesktop.org/standards/PolicyKit/1.0/policyconfig.dtd">
 <policyconfig>
   <vendor>Pritunl</vendor>
-  <vendor_url>http://pritunl.com/</vendor_url>
+  <vendor_url>https://pritunl.com/</vendor_url>
 
   <action id="com.pritunl.client.profile_start">
     <description>Start pritunl connection</description>
