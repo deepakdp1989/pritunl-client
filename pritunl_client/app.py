@@ -457,7 +457,7 @@ class App(object):
         dialog.set_image(utils.get_logo())
         dialog.set_message(('<b>%s - v%s</b>\n\n' +
             'Copyright (c) 2013-2016 Pritunl\n\n' +
-            'http://pritunl.com/') % (
+            'https://pritunl.com/') % (
                 APP_NAME_FORMATED,
                 __version__,
             ))
