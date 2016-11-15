@@ -65,10 +65,10 @@ up)
     R="${R}nameserver $NS
 "
   done
-  #echo -n "$R" | $RESOLVCONF -p -a "${dev}"
-  echo -n "$R" | $RESOLVCONF -a "${dev}.inet"
+  echo -n "$R" | $RESOLVCONF -a "${dev}.vpn"
+  $RESOLVCONF -u || true
   ;;
 down)
-  $RESOLVCONF -d "${dev}.inet"
+  $RESOLVCONF -d "${dev}.vpn"
   ;;
 esac
