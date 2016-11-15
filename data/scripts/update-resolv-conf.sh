@@ -70,5 +70,6 @@ up)
   ;;
 down)
   $RESOLVCONF -d "${dev}.vpn"
+  $RESOLVCONF -u || true
   ;;
 esac
