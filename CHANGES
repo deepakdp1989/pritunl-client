@@ -1,7 +1,8 @@
 pritunl-client changelog
 ========================
 
-<%= version %>
+Version 1.0.1161.18 2016-11-16
+------------------------------
 
 Fix resolvconf issue
 
