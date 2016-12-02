@@ -1,7 +1,8 @@
 pritunl-client changelog
 ========================
 
-<%= version %>
+Version 1.0.1177.23 2016-12-02
+------------------------------
 
 Add support for push authentication cache
 
