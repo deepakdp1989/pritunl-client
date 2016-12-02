@@ -38,6 +38,10 @@ class Profile(object):
         self.org_id = None
         self.server_id = None
         self.password_mode = None
+        self.push_auth = None
+        self.push_auth_ttl = None
+        self.push_token = None
+        self.push_token_time = None
         self.sync_hash = None
         self.sync_token = None
         self.sync_secret = None
@@ -75,6 +79,10 @@ class Profile(object):
             'org_id': self.org_id,
             'server_id': self.server_id,
             'password_mode': self.password_mode,
+            'push_auth': self.push_auth,
+            'push_auth_ttl': self.push_auth_ttl,
+            'push_token': self.push_token,
+            'push_token_time': self.push_token_time,
             'sync_hash': self.sync_hash,
             'sync_token': self.sync_token,
             'sync_secret': self.sync_secret,
@@ -124,6 +132,10 @@ class Profile(object):
                     self.org_id = data.get('org_id')
                     self.server_id = data.get('server_id')
                     self.password_mode = data.get('password_mode')
+                    self.push_auth = data.get('push_auth')
+                    self.push_auth_ttl = data.get('push_auth_ttl')
+                    self.push_token = data.get('push_token')
+                    self.push_token_time = data.get('push_token_time')
                     self.sync_hash = data.get('sync_hash')
                     self.sync_token = data.get('sync_token')
                     self.sync_secret = data.get('sync_secret')
@@ -191,7 +203,11 @@ class Profile(object):
         self.user_id = conf_data.get('user_id', self.user_id)
         self.org_id = conf_data.get('organization_id', self.org_id)
         self.server_id = conf_data.get('server_id', self.server_id)
-        self.password_mode = conf_data.get('password_mode', self.password_mode)
+        self.password_mode = conf_data.get(
+            'password_mode', self.password_mode)
+        self.push_auth = conf_data.get('push_auth', self.push_auth)
+        self.push_auth_ttl = conf_data.get(
+            'push_auth_ttl', self.push_auth_ttl)
         self.sync_hash = conf_data.get('sync_hash', self.sync_hash)
         self.sync_token = conf_data.get('sync_token', self.sync_token)
         self.sync_secret = conf_data.get('sync_secret', self.sync_secret)
