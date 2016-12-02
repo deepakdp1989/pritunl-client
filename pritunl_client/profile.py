@@ -219,6 +219,24 @@ class Profile(object):
         with open(self.path, 'r') as profile_file:
             profile_data = profile_file.read()
 
+        uv_id = None
+        uv_name = None
+        for line in profile_data.splitlines():
+            if line.startswith('setenv UV_ID '):
+                uv_id = line
+            elif line.startswith('setenv UV_NAME '):
+                uv_name = line
+
+        new_data = ''
+        for line in data.splitlines():
+            if uv_id and line.startswith('setenv UV_ID '):
+                new_data += uv_id + '\n'
+            elif uv_name and line.startswith('setenv UV_NAME '):
+                new_data += uv_name + '\n'
+            else:
+                new_data += line + '\n'
+        data = new_data
+
         tls_auth = ''
         if 'key-direction' in profile_data and 'key-direction' not in data:
             tls_auth += 'key-direction 1\n'
