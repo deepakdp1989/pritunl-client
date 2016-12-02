@@ -22,7 +22,8 @@ class ProfileLinux(profile.Profile):
             return os.path.join(os.path.abspath(os.sep),
                 'etc', 'pritunl_client', profile_hash)
 
-    def _start(self, status_callback, connect_callback, passwd, mode=START):
+    def _start(self, status_callback, connect_callback, push_token,
+            passwd, mode=START):
         if self.autostart or mode == AUTOSTART:
             if not os.path.exists(self._get_profile_hash_path()):
                 self.set_autostart(False)
@@ -42,14 +43,22 @@ class ProfileLinux(profile.Profile):
         args = ['pkexec', '/usr/bin/pritunl-client-pk-%s' % mode]
 
         env = {'VPN_CONF': self.get_vpn_conf()}
-        if passwd:
+        if push_token or passwd:
+            if push_token:
+                push_token += '<%=PUSH_TOKEN=%>'
+                if passwd:
+                    passwd = push_token + passwd
+                else:
+                    passwd = push_token
+
             env['VPN_PASSWORD'] = passwd
 
         self._run_ovpn(status_callback, connect_callback,
             args, on_exit, True, env=env)
 
-    def _start_autostart(self, status_callback, connect_callback):
-        self._start(status_callback, connect_callback, None, AUTOSTART)
+    def _start_autostart(self, status_callback, connect_callback, push_token):
+        self._start(status_callback, connect_callback, push_token,
+            None, AUTOSTART)
 
     def _stop(self, silent):
         data = profile._connections.get(self.id)
