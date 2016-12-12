@@ -255,7 +255,20 @@ class App(object):
                 if passwd is None:
                     return
 
-            if 'otp' in auth_type:
+            if 'duo' in auth_type:
+                dialog = interface.InputDialog()
+                dialog.set_title(APP_NAME_FORMATED)
+                dialog.set_icon(utils.get_logo())
+                dialog.set_message('Profile Duo Passcode Required')
+                dialog.set_message_secondary(
+                    'Enter Duo passcode %s' % (prfl.name))
+                dialog.set_input_label('Duo Passcode:')
+                dialog.set_input_width(16)
+                passwd += dialog.run()
+                dialog.destroy()
+                if passwd is None:
+                    return
+            elif 'otp' in auth_type:
                 dialog = interface.InputDialog()
                 dialog.set_title(APP_NAME_FORMATED)
                 dialog.set_icon(utils.get_logo())
