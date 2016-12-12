@@ -1,6 +1,10 @@
 pritunl-client changelog
 ========================
 
+<%= version %>
+
+Add support for Duo passcode
+
 Version 1.0.1177.23 2016-12-02
 ------------------------------
 
