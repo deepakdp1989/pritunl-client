@@ -274,6 +274,22 @@ class App(object):
                     return
                 else:
                     passwd += resp
+            elif 'yubikey' in auth_type:
+                dialog = interface.InputDialog()
+                dialog.set_title(APP_NAME_FORMATED)
+                dialog.set_icon(utils.get_logo())
+                dialog.set_message('Profile YubiKey Required')
+                dialog.set_message_secondary(
+                    'Insert YubiKey for %s' % (prfl.name))
+                dialog.set_input_label('YubiKey:')
+                dialog.set_input_width(16)
+                dialog.set_visibility(False)
+                resp = dialog.run()
+                dialog.destroy()
+                if resp is None:
+                    return
+                else:
+                    passwd += resp
             elif 'otp' in auth_type:
                 dialog = interface.InputDialog()
                 dialog.set_title(APP_NAME_FORMATED)
