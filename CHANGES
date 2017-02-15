@@ -1,6 +1,10 @@
 pritunl-client changelog
 ========================
 
+<%= version %>
+
+Add support for YubiKey
+
 Version 1.0.1188.43 2016-12-13
 ------------------------------
 
