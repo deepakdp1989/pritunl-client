@@ -265,7 +265,7 @@ class App(object):
                 dialog.set_icon(utils.get_logo())
                 dialog.set_message('Profile Duo Passcode Required')
                 dialog.set_message_secondary(
-                    'Enter Duo passcode %s' % (prfl.name))
+                    'Enter Duo passcode for %s' % (prfl.name))
                 dialog.set_input_label('Duo Passcode:')
                 dialog.set_input_width(16)
                 resp = dialog.run()
