@@ -150,8 +150,10 @@ class InputDialog:
         self._dialog.set_position(gtk.WIN_POS_CENTER)
         self._dialog.set_skip_taskbar_hint(False)
         self._dialog.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_NORMAL)
+        self._dialog.set_default_response(gtk.RESPONSE_OK)
         self._label = gtk.Label()
         self._entry = gtk.Entry()
+        self._entry.set_activates_default(True)
 
     def set_title(self, title):
         self._dialog.set_title(title)
