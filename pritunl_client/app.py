@@ -235,10 +235,12 @@ class App(object):
                 dialog.set_input_label('Password:')
                 dialog.set_input_width(16)
                 dialog.set_visibility(False)
-                passwd += dialog.run()
+                resp = dialog.run()
                 dialog.destroy()
-                if passwd is None:
+                if resp is None:
                     return
+                else:
+                    passwd += resp
 
             if 'pin' in auth_type:
                 dialog = interface.InputDialog()
@@ -250,10 +252,12 @@ class App(object):
                 dialog.set_input_label('Pin:')
                 dialog.set_input_width(16)
                 dialog.set_visibility(False)
-                passwd += dialog.run()
+                resp = dialog.run()
                 dialog.destroy()
-                if passwd is None:
+                if resp is None:
                     return
+                else:
+                    passwd += resp
 
             if 'duo' in auth_type:
                 dialog = interface.InputDialog()
@@ -264,10 +268,12 @@ class App(object):
                     'Enter Duo passcode %s' % (prfl.name))
                 dialog.set_input_label('Duo Passcode:')
                 dialog.set_input_width(16)
-                passwd += dialog.run()
+                resp = dialog.run()
                 dialog.destroy()
-                if passwd is None:
+                if resp is None:
                     return
+                else:
+                    passwd += resp
             elif 'otp' in auth_type:
                 dialog = interface.InputDialog()
                 dialog.set_title(APP_NAME_FORMATED)
@@ -277,10 +283,12 @@ class App(object):
                     'Enter authenticator key for %s' % (prfl.name))
                 dialog.set_input_label('Authenticator Key:')
                 dialog.set_input_width(16)
-                passwd += dialog.run()
+                resp = dialog.run()
                 dialog.destroy()
-                if passwd is None:
+                if resp is None:
                     return
+                else:
+                    passwd += resp
 
         if prfl.encrypted:
             if not self.wait_for_usb_insert():
