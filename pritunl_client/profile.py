@@ -38,10 +38,10 @@ class Profile(object):
         self.org_id = None
         self.server_id = None
         self.password_mode = None
-        self.push_auth = None
-        self.push_auth_ttl = None
-        self.push_token = None
-        self.push_token_time = None
+        self.token = None
+        self.token_ttl = None
+        self.auth_token = None
+        self.auth_token_time = None
         self.sync_hash = None
         self.sync_token = None
         self.sync_secret = None
@@ -79,10 +79,10 @@ class Profile(object):
             'org_id': self.org_id,
             'server_id': self.server_id,
             'password_mode': self.password_mode,
-            'push_auth': self.push_auth,
-            'push_auth_ttl': self.push_auth_ttl,
-            'push_token': self.push_token,
-            'push_token_time': self.push_token_time,
+            'token': self.token,
+            'token_ttl': self.token_ttl,
+            'auth_token': self.auth_token,
+            'auth_token_time': self.auth_token_time,
             'sync_hash': self.sync_hash,
             'sync_token': self.sync_token,
             'sync_secret': self.sync_secret,
@@ -132,10 +132,10 @@ class Profile(object):
                     self.org_id = data.get('org_id')
                     self.server_id = data.get('server_id')
                     self.password_mode = data.get('password_mode')
-                    self.push_auth = data.get('push_auth')
-                    self.push_auth_ttl = data.get('push_auth_ttl')
-                    self.push_token = data.get('push_token')
-                    self.push_token_time = data.get('push_token_time')
+                    self.token = data.get('token')
+                    self.token_ttl = data.get('token_ttl')
+                    self.auth_token = data.get('auth_token')
+                    self.auth_token_time = data.get('auth_token_time')
                     self.sync_hash = data.get('sync_hash')
                     self.sync_token = data.get('sync_token')
                     self.sync_secret = data.get('sync_secret')
@@ -205,9 +205,9 @@ class Profile(object):
         self.server_id = conf_data.get('server_id', self.server_id)
         self.password_mode = conf_data.get(
             'password_mode', self.password_mode)
-        self.push_auth = conf_data.get('push_auth', self.push_auth)
-        self.push_auth_ttl = conf_data.get(
-            'push_auth_ttl', self.push_auth_ttl)
+        self.token = conf_data.get('token', self.token)
+        self.token_ttl = conf_data.get(
+            'token_ttl', self.token_ttl)
         self.sync_hash = conf_data.get('sync_hash', self.sync_hash)
         self.sync_token = conf_data.get('sync_token', self.sync_token)
         self.sync_secret = conf_data.get('sync_secret', self.sync_secret)
@@ -301,38 +301,38 @@ class Profile(object):
             else:
                 callback()
 
-    def _get_push_token(self):
-        if not self.push_auth:
+    def _get_auth_token(self):
+        if not self.token:
             return
 
-        if not self.push_token or \
-                not self.push_token_time or \
-                abs(self.push_token_time - int(time.time())) > (
-                    self.push_auth_ttl or 604800):
-            self.push_token = uuid.uuid4().hex
-            self.push_token_time = int(time.time())
+        if not self.auth_token or \
+                not self.auth_token_time or \
+                abs(self.auth_token_time - int(time.time())) > (
+                    self.token_ttl or 604800):
+            self.auth_token = uuid.uuid4().hex
+            self.auth_token_time = int(time.time())
             self.commit()
 
-        return self.push_token
+        return self.auth_token
 
     def start(self, status_callback, connect_callback=None, passwd=None):
         if self.status in ACTIVE_STATES:
             self._set_status(self.status)
             return False
-        push_token = self._get_push_token()
-        self._start(status_callback, connect_callback, push_token, passwd)
+        auth_token = self._get_auth_token()
+        self._start(status_callback, connect_callback, auth_token, passwd)
         return True
 
     def start_autostart(self, status_callback, connect_callback=None):
         if self.status in ACTIVE_STATES:
             return
-        push_token = self._get_push_token()
-        self._start_autostart(status_callback, connect_callback, push_token)
+        auth_token = self._get_auth_token()
+        self._start_autostart(status_callback, connect_callback, auth_token)
 
-    def _start(self, status_callback, connect_callback, push_token, passwd):
+    def _start(self, status_callback, connect_callback, auth_token, passwd):
         raise NotImplementedError()
 
-    def _start_autostart(self, status_callback, connect_callback, push_token):
+    def _start_autostart(self, status_callback, connect_callback, auth_token):
         raise NotImplementedError()
 
     def _kill_pid(self, pid):
