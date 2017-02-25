@@ -17,6 +17,7 @@ import requests
 import base64
 import hashlib
 import hmac
+import collections
 import Crypto.Cipher.AES
 import Crypto.Random
 
@@ -590,11 +591,18 @@ class Profile(object):
 
     @classmethod
     def iter_profiles(cls):
+        prflsMap = collections.defaultdict(list)
+
         if os.path.isdir(PROFILES_DIR):
             for profile_path in os.listdir(PROFILES_DIR):
                 profile_id, extension = os.path.splitext(profile_path)
                 if extension == '.ovpn':
-                    yield cls.get_profile(profile_id)
+                    prfl = cls.get_profile(profile_id)
+                    prflsMap[prfl.name].append(prfl)
+
+        for name in sorted(prflsMap.keys()):
+            for prfl in prflsMap[name]:
+                yield prfl
 
     @classmethod
     def get_profile(cls, id=None):
