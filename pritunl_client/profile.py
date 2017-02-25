@@ -94,20 +94,7 @@ class Profile(object):
         }
 
     def __getattr__(self, name):
-        if name == 'name':
-            if self.profile_name:
-                return self.profile_name
-            elif self.user_name and self.org_name and self.server_name:
-                return '%s@%s (%s)' % (self.user_name, self.org_name,
-                    self.server_name)
-            else:
-                return 'Unknown Profile'
-        elif name == 'status':
-            connection_data = _connections.get(self.id)
-            if connection_data:
-                return connection_data.get('status', ENDED)
-            return ENDED
-        elif name not in self.__dict__:
+        if name not in self.__dict__:
             raise AttributeError('Config instance has no attribute %r' % name)
         return self.__dict__[name]
 
@@ -118,6 +105,23 @@ class Profile(object):
         if self.auth_passwd:
             return 'password'
         return None
+
+    @property
+    def name(self):
+        if self.profile_name:
+            return self.profile_name
+        elif self.user_name and self.org_name and self.server_name:
+            return '%s@%s (%s)' % (self.user_name, self.org_name,
+                self.server_name)
+        else:
+            return 'Unknown Profile'
+
+    @property
+    def status(self):
+        connection_data = _connections.get(self.id)
+        if connection_data:
+            return connection_data.get('status', ENDED)
+        return ENDED
 
     def load(self):
         try:
