@@ -553,6 +553,8 @@ class Profile(object):
                     thread.start()
                 if 'Initialization Sequence Completed' in line:
                     self._set_status(CONNECTED)
+                elif 'Inactivity timeout (--inactive)' in line:
+                    pass
                 elif 'Inactivity timeout' in line:
                     self._set_status(RECONNECTING)
                 elif 'AUTH_FAILED' in line or 'auth-failure' in line:
