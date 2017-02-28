@@ -1,7 +1,8 @@
 pritunl-client changelog
 ========================
 
-<%= version %>
+Version 1.0.1265.2 2017-02-28
+-----------------------------
 
 Add support for inactive timeout
 Interface improvements
