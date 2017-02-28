@@ -134,7 +134,7 @@ setup(
     name='pritunl_client',
     version=VERSION,
     description='Pritunl VPN Client',
-    long_description=open('README.rst').read(),
+    long_description=open('README.md').read(),
     author='Pritunl',
     author_email='contact@pritunl.com',
     url='https://github.com/pritunl/pritunl-client',
