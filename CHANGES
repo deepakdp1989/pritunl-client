@@ -1,6 +1,10 @@
 pritunl-client changelog
 ========================
 
+<%= version %>
+
+Fix issue with autostart on shell client
+
 Version 1.0.1265.2 2017-02-28
 -----------------------------
 
