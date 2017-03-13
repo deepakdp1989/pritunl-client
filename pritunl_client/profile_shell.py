@@ -35,8 +35,8 @@ class ProfileShell(profile.Profile):
 
         self._run_ovpn(status_callback, connect_callback, args, on_exit, False)
 
-    def _start_autostart(self, status_callback, connect_callback):
-        self._start(status_callback, connect_callback, None)
+    def _start_autostart(self, status_callback, connect_callback, auth_token):
+        self._start(status_callback, connect_callback, auth_token, None)
 
     def _stop(self, silent):
         data = profile._connections.get(self.id)
