@@ -111,9 +111,8 @@ class Profile(object):
     def name(self):
         if self.profile_name:
             return self.profile_name
-        elif self.user_name and self.org_name and self.server_name:
-            return '%s@%s (%s)' % (self.user_name, self.org_name,
-                self.server_name)
+        elif self.user_name and self.server_name:
+            return '%s (%s)' % (self.user_name, self.server_name)
         else:
             return 'Unknown Profile'
 
