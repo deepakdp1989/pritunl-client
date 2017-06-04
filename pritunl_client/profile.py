@@ -17,11 +17,13 @@ import requests
 import base64
 import hashlib
 import hmac
+import re
 import collections
 import Crypto.Cipher.AES
 import Crypto.Random
 
 _connections = {}
+_ip_regex = re.compile(r"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}")
 
 class Profile(object):
     def __init__(self, id=None):
@@ -640,8 +642,11 @@ def import_uri(profile_uri):
         profile_uri = 'https://' + profile_uri
     profile_uri = profile_uri.replace('/k/', '/ku/', 1)
 
-    response = requests.get(profile_uri, verify=False,
-        timeout=IMPORT_TIMEOUT)
+    response = requests.get(
+        profile_uri,
+        verify=not _ip_regex.search(profile_uri),
+        timeout=IMPORT_TIMEOUT,
+    )
     if response.status_code == 200:
         pass
     elif response.status_code == 404:
