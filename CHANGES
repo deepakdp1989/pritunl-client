@@ -4,6 +4,7 @@ pritunl-client changelog
 <%= version %>
 
 Interface improvements
+Improve profile import
 
 Version 1.0.1278.70 2017-03-13
 ------------------------------
