@@ -318,7 +318,7 @@ class App(object):
         dialog.set_title(APP_NAME_FORMATED)
         dialog.set_icon(utils.get_logo())
         dialog.set_message('Connecting to %s' % prfl.name)
-        dialog.set_message_secondary('Conecting to the server...')
+        dialog.set_message_secondary('Connecting to the server...')
 
         def connect_callback():
             dialog.close()
