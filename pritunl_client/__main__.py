@@ -10,6 +10,7 @@ import time
 import hashlib
 import json
 import requests
+import uuid
 
 def client_gui():
     import pritunl_client
