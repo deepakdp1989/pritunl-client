@@ -269,7 +269,11 @@ def _pk_start(autostart=False):
         args.append('--auth-user-pass')
         args.append(pass_path)
 
-    script_path = os.path.join(SHARE_DIR, 'update-resolv-conf.sh')
+    try:
+        subprocess.check_call(['which', 'systemd-resolve'])
+        script_path = os.path.join(SHARE_DIR, 'update-systemd-resolved.sh')
+    except:
+        script_path = os.path.join(SHARE_DIR, 'update-resolv-conf.sh')
 
     args.extend(['--script-security', '2'])
     args.append('--up-restart')
