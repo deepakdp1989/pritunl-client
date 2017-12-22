@@ -83,7 +83,7 @@ data_files += [
     (os.path.join(os.path.abspath(os.sep), 'usr', 'share',
             'pritunl_client'), [
         os.path.join('data', 'scripts', 'update-resolv-conf.sh'),
-    ])
+    ]),
         (os.path.join(os.path.abspath(os.sep), 'usr', 'share',
         'pritunl_client'), [
         os.path.join('data', 'scripts', 'update-systemd-resolved.sh'),
