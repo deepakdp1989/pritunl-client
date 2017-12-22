@@ -1,6 +1,10 @@
 pritunl-client changelog
 ========================
 
+<%= version %>
+
+Add support for systemd resolve
+
 Version 1.0.1361.39 2017-06-04
 ------------------------------
 
