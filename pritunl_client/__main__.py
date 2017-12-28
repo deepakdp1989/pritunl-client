@@ -270,10 +270,18 @@ def _pk_start(autostart=False):
         args.append('--auth-user-pass')
         args.append(pass_path)
 
+    systemd_resolve = False
     try:
         subprocess.check_call(['which', 'systemd-resolve'])
-        script_path = os.path.join(SHARE_DIR, 'update-systemd-resolved.sh')
+        with open('/etc/resolv.conf', 'r') as resolv_file:
+            data = resolv_file.read()
+            if 'systemd-resolved' in data or '127.0.0.53' in data:
+                systemd_resolve = True
     except:
+        pass
+    if systemd_resolve:
+        script_path = os.path.join(SHARE_DIR, 'update-systemd-resolved.sh')
+    else:
         script_path = os.path.join(SHARE_DIR, 'update-resolv-conf.sh')
 
     args.extend(['--script-security', '2'])
