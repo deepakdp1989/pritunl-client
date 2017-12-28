@@ -1,7 +1,8 @@
 pritunl-client changelog
 ========================
 
-<%= version %>
+Version 1.0.1568.9 2017-12-28
+-----------------------------
 
 Fix resolve configuration
 
