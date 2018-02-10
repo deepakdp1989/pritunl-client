@@ -366,25 +366,3 @@ def pk_clear_autostart():
         'etc', 'pritunl_client', sys.argv[1])
     if os.path.exists(profile_hash_path):
         os.remove(profile_hash_path)
-
-def pk_get_devices():
-    from pritunl_client import utils
-    print json.dumps(utils.get_usb_drives())
-
-def pk_format_device():
-    from pritunl_client import utils
-    utils.format_disk(sys.argv[1])
-
-def pk_get_disk_profile():
-    from pritunl_client import utils
-    env = get_env()
-    print json.dumps(utils.get_disk_profile(env.get('PROFILE_ID')))
-
-def pk_set_disk_profile():
-    from pritunl_client import utils
-    env = get_env()
-    print json.dumps(utils.set_disk_profile(
-        env.get('PROFILE_ID'),
-        env.get('PROFILE_IV'),
-        env.get('PROFILE_KEY'),
-    ))

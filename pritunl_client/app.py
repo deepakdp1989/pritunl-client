@@ -64,7 +64,7 @@ class App(object):
             menu_item.set_callback(self.on_delete_profile, prfl.id)
             profile_menu.add_item(menu_item)
 
-            if not prfl.auth_passwd and not prfl.encrypted:
+            if not prfl.auth_passwd:
                 menu_item = interface.CheckMenuItem()
                 menu_item.set_label('Autostart')
                 menu_item.set_active(prfl.autostart)
@@ -128,71 +128,6 @@ class App(object):
         dialog.set_message_secondary(error_msgs[status])
         dialog.run()
         dialog.destroy()
-
-    def wait_for_usb_insert(self):
-        interrupt = False
-        has_device = []
-        dialog = interface.MessageDialog()
-
-        def refresh():
-            while not interrupt:
-                time.sleep(0.025)
-                if profile.has_usb_device():
-                    has_device.append(True)
-                    try:
-                        dialog.close()
-                    except:
-                        pass
-                    return
-
-        thread = threading.Thread(target=refresh)
-        thread.daemon = True
-        thread.start()
-
-        dialog.set_type(MESSAGE_LOADING)
-        dialog.set_buttons(BUTTONS_CANCEL)
-        dialog.set_title(APP_NAME_FORMATED)
-        dialog.set_icon(utils.get_logo())
-        dialog.set_message('Insert USB key...')
-        dialog.set_message_secondary(
-            'Insert Pritunl USB key to unlock profile')
-        dialog.run()
-        dialog.destroy()
-
-        return bool(has_device)
-
-    def wait_for_usb_remove(self):
-        while True:
-            interrupt = False
-            not_has_device = []
-            dialog = interface.MessageDialog()
-
-            def refresh():
-                while not interrupt:
-                    time.sleep(0.025)
-                    if not profile.has_usb_device():
-                        not_has_device.append(True)
-                        try:
-                            dialog.close()
-                        except:
-                            pass
-                        return
-
-            thread = threading.Thread(target=refresh)
-            thread.daemon = True
-            thread.start()
-
-            dialog.set_type(MESSAGE_LOADING)
-            dialog.set_buttons(BUTTONS_CANCEL)
-            dialog.set_title(APP_NAME_FORMATED)
-            dialog.set_icon(utils.get_logo())
-            dialog.set_message('Remove USB key...')
-            dialog.set_message_secondary('Remove Pritunl USB key')
-            dialog.run()
-            dialog.destroy()
-
-            if bool(not_has_device):
-                return
 
     def on_status_change(self):
         conn_count = 0
@@ -300,12 +235,6 @@ class App(object):
                 else:
                     passwd += resp
 
-        if prfl.encrypted:
-            if not self.wait_for_usb_insert():
-                return
-            prfl.decrypt_vpv_conf()
-            self.wait_for_usb_remove()
-
         dialog = interface.MessageDialog()
         dialog.set_type(MESSAGE_LOADING)
         dialog.set_buttons(BUTTONS_CANCEL)
@@ -364,109 +293,6 @@ class App(object):
             prfl.delete()
             self.update_menu()
         dialog.destroy()
-
-    def on_setup_usb_key(self, profile_id):
-        prfl = profile.Profile.get_profile(profile_id)
-
-        if not profile.has_usb_device():
-            devices = profile.get_usb_devices()
-
-            if not devices:
-                interrupt = False
-                dialog = interface.MessageDialog()
-                refresh_devices = []
-
-                def refresh():
-                    while not interrupt:
-                        time.sleep(0.025)
-                        devices = profile.get_usb_devices()
-                        if devices:
-                            refresh_devices.append(devices)
-                            try:
-                                dialog.close()
-                            except:
-                                pass
-                            return
-
-                thread = threading.Thread(target=refresh)
-                thread.daemon = True
-                thread.start()
-
-                dialog.set_type(MESSAGE_INFO)
-                dialog.set_buttons(BUTTONS_CANCEL)
-                dialog.set_title(APP_NAME_FORMATED)
-                dialog.set_icon(utils.get_logo())
-                dialog.set_message('Insert USB device...')
-                dialog.set_message_secondary(
-                    'Insert a USB device to use for profile key')
-                dialog.run()
-                dialog.destroy()
-
-                interrupt = True
-                if not refresh_devices:
-                    return
-
-                devices = refresh_devices[0]
-
-            if not profile.has_usb_device():
-                interrupt = False
-                devices_map = []
-                has_device = []
-                dialog = interface.SelectDialog()
-
-                def refresh():
-                    while not interrupt:
-                        time.sleep(0.025)
-                        if profile.has_usb_device():
-                            has_device.append(True)
-                            try:
-                                dialog.close()
-                            except:
-                                pass
-                            return
-
-                thread = threading.Thread(target=refresh)
-                thread.daemon = True
-                thread.start()
-
-                for usb_device, usb_name in devices.items():
-                    devices_map.append(usb_device)
-                    dialog.add_select_item(usb_name)
-
-                dialog.set_title(APP_NAME_FORMATED)
-                dialog.set_icon(utils.get_logo())
-                dialog.set_message('Format USB device')
-                dialog.set_message_secondary(
-                    'Insert existing Pritunl USB key or select a USB ' +
-                    'device below to setup a new USB key. This will FORMAT ' +
-                    'AND ERASE ALL DATA on the selected device.')
-                response = dialog.run()
-                dialog.destroy()
-                interrupt = True
-
-                if not has_device:
-                    if response is None:
-                        return
-
-                    device = devices_map[response]
-                    profile.format_usb_device(device)
-                    time.sleep(1)
-
-        prfl.encrypt_vpv_conf()
-        self.wait_for_usb_remove()
-
-        dialog = interface.MessageDialog()
-        dialog.set_type(MESSAGE_INFO)
-        dialog.set_buttons(BUTTONS_OK)
-        dialog.set_title(APP_NAME_FORMATED)
-        dialog.set_icon(utils.get_logo())
-        dialog.set_message('USB key setup for %s complete' % prfl.name)
-        dialog.set_message_secondary(
-            'The profile has been sucessfully protected with USB key')
-        dialog.run()
-        dialog.destroy()
-
-        self.update_menu()
 
     def on_autostart_profile(self, profile_id):
         prfl = profile.Profile.get_profile(profile_id)

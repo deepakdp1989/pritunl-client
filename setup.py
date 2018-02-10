@@ -105,14 +105,6 @@ if install_gtk:
             'pritunl_client.__main__:pk_set_autostart',
         'pritunl-client-pk-clear-autostart = ' + \
             'pritunl_client.__main__:pk_clear_autostart',
-        'pritunl-client-pk-get-devices = ' + \
-            'pritunl_client.__main__:pk_get_devices',
-        'pritunl-client-pk-format-device = ' + \
-            'pritunl_client.__main__:pk_format_device',
-        'pritunl-client-pk-get-disk-profile = ' + \
-            'pritunl_client.__main__:pk_get_disk_profile',
-        'pritunl-client-pk-set-disk-profile = ' + \
-            'pritunl_client.__main__:pk_set_disk_profile',
     ]
 
 patch_files = []

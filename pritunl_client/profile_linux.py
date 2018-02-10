@@ -10,9 +10,6 @@ import hashlib
 
 class ProfileLinux(profile.Profile):
     def _get_profile_hash(self):
-        if self.encrypted and not self.decrypted_data:
-            return
-
         if os.path.exists(self.path):
             return hashlib.sha512(self.get_vpn_conf()).hexdigest()
 

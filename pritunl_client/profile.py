@@ -50,9 +50,6 @@ class Profile(object):
         self.sync_secret = None
         self.sync_hosts = []
         self.autostart = False
-        self.encrypted = 0
-        self.encrypted_data = None
-        self.decrypted_data = None
         self.auth_passwd = False
         self.pid = None
 
@@ -91,8 +88,6 @@ class Profile(object):
             'sync_secret': self.sync_secret,
             'sync_hosts': self.sync_hosts,
             'autostart': self.autostart,
-            'encrypted': self.encrypted,
-            'encrypted_data': self.encrypted_data,
             'pid': self.pid,
         }
 
@@ -147,8 +142,6 @@ class Profile(object):
                     self.sync_secret = data.get('sync_secret')
                     self.sync_hosts = data.get('sync_hosts', [])
                     self.autostart = data.get('autostart', False)
-                    self.encrypted = data.get('encrypted', 0)
-                    self.encrypted_data = data.get('encrypted_data')
                     self.pid = data.get('pid')
 
                 with open(self.path, 'r') as ovpn_file:
@@ -427,67 +420,9 @@ class Profile(object):
 
     def get_vpn_conf(self):
         data = ''
-
         with open(self.path, 'r') as profile_file:
             data += profile_file.read()
-
-        if self.encrypted:
-            data = data.strip() + '\n'
-            data += self.decrypted_data
-
         return data
-
-    def encrypt_vpv_conf(self):
-        with open(self.path, 'r') as profile_file:
-            profile_data = profile_file.read()
-
-        key_data = ''
-
-        s_index = profile_data.find('<tls-auth>')
-        e_index = profile_data.find('</tls-auth>')
-        if s_index != -1 and e_index != -1:
-            key_data += profile_data[s_index:e_index + 11] + '\n'
-            profile_data = profile_data[:s_index] + profile_data[e_index + 11:]
-
-        s_index = profile_data.find('<cert>')
-        e_index = profile_data.find('</cert>')
-        if s_index != -1 and e_index != -1:
-            key_data += profile_data[s_index:e_index + 7] + '\n'
-            profile_data = profile_data[:s_index] + profile_data[e_index + 7:]
-
-        s_index = profile_data.find('<key>')
-        e_index = profile_data.find('</key>')
-        if s_index != -1 and e_index != -1:
-            key_data += profile_data[s_index:e_index + 6] + '\n'
-            profile_data = profile_data[:s_index] + profile_data[e_index + 6:]
-
-        profile_data = profile_data.strip()
-        key_data = key_data.strip()
-
-        key_data += '\00' * (Crypto.Cipher.AES.block_size - (
-            len(key_data) % Crypto.Cipher.AES.block_size))
-
-        key = Crypto.Random.new().read(32)
-        iv = Crypto.Random.new().read(Crypto.Cipher.AES.block_size)
-
-        cipher = Crypto.Cipher.AES.new(key, Crypto.Cipher.AES.MODE_CFB, iv)
-        key_data = cipher.encrypt(key_data)
-
-        write_usb_key(self.id, iv, key)
-        self.autostart = False
-        self.encrypted = 1
-        self.encrypted_data = base64.b64encode(key_data)
-
-        self.commit()
-
-        with open(self.path, 'w') as profile_file:
-            profile_file.write(profile_data)
-
-    def decrypt_vpv_conf(self):
-        iv, key = get_usb_key(self.id)
-        cipher = Crypto.Cipher.AES.new(key, Crypto.Cipher.AES.MODE_CFB, iv)
-        key_data = cipher.decrypt(base64.b64decode(self.encrypted_data))
-        self.decrypted_data = key_data.strip('\00')
 
     def _run_ovpn(self, status_callback, connect_callback,
             args, on_exit, wait, env=None, **kwargs):
@@ -660,64 +595,3 @@ def import_uri(profile_uri):
         prfl = Profile.get_profile()
         prfl.write_profile(data[key])
 
-def has_usb_device():
-    if PLATFORM == LINUX or PLATFORM == SHELL:
-        return os.path.exists(USB_DISK_PATH)
-    else:
-        return False
-
-def get_usb_devices():
-    if PLATFORM == LINUX or PLATFORM == SHELL:
-        devices = utils.check_output([
-            'pkexec',
-            '/usr/bin/pritunl-client-pk-get-devices',
-        ])
-        devices = json.loads(devices)
-        return devices
-    else:
-        return {}
-
-def format_usb_device(device):
-    if PLATFORM == LINUX or PLATFORM == SHELL:
-        utils.check_output([
-            'pkexec',
-            '/usr/bin/pritunl-client-pk-format-device',
-            device,
-        ])
-    else:
-        pass
-
-def write_usb_key(id, iv, key):
-    iv = base64.b64encode(iv)
-    key = base64.b64encode(key)
-
-    if PLATFORM == LINUX or PLATFORM == SHELL:
-        utils.check_output([
-            'pkexec',
-            '/usr/bin/pritunl-client-pk-set-disk-profile',
-            utils.write_env({
-                'PROFILE_ID': id,
-                'PROFILE_IV': iv,
-                'PROFILE_KEY': key,
-            }),
-        ])
-    else:
-        pass
-
-def get_usb_key(id):
-    if PLATFORM == LINUX or PLATFORM == SHELL:
-        data = utils.check_output([
-            'pkexec',
-            '/usr/bin/pritunl-client-pk-get-disk-profile',
-            utils.write_env({
-                'PROFILE_ID': id,
-            }),
-        ])
-        data = json.loads(data)
-
-        iv = base64.b64decode(data['iv'])
-        key = base64.b64decode(data['key'])
-
-        return iv, key
-    else:
-        pass
