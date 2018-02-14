@@ -54,7 +54,7 @@ class MessageDialog:
             type=_mappings[self._type],
             buttons=_mappings[self._buttons])
         self._dialog.set_position(gtk.WIN_POS_CENTER)
-        self._dialog.set_skip_taskbar_hint(False)
+        self._dialog.set_skip_taskbar_hint(True)
         self._dialog.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_NORMAL)
 
         if self._type == MESSAGE_LOADING:
@@ -128,7 +128,6 @@ class MessageDialog:
     def run(self):
         self._dialog.show_all()
         self._dialog.set_keep_above(True)
-        self._dialog.set_keep_above(False)
         response = self._dialog.run()
         if response == gtk.RESPONSE_OK:
             return True
@@ -148,7 +147,7 @@ class InputDialog:
             buttons=gtk.BUTTONS_OK_CANCEL,
         )
         self._dialog.set_position(gtk.WIN_POS_CENTER)
-        self._dialog.set_skip_taskbar_hint(False)
+        self._dialog.set_skip_taskbar_hint(True)
         self._dialog.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_NORMAL)
         self._dialog.set_default_response(gtk.RESPONSE_OK)
         self._label = gtk.Label()
@@ -183,7 +182,6 @@ class InputDialog:
         self._dialog.vbox.pack_end(hbox, True, True, 0)
         self._dialog.show_all()
         self._dialog.set_keep_above(True)
-        self._dialog.set_keep_above(False)
         response = self._dialog.run()
         if response == gtk.RESPONSE_OK:
             return self._entry.get_text()
@@ -201,7 +199,7 @@ class SelectDialog:
             buttons=gtk.BUTTONS_OK_CANCEL,
         )
         self._dialog.set_position(gtk.WIN_POS_CENTER)
-        self._dialog.set_skip_taskbar_hint(False)
+        self._dialog.set_skip_taskbar_hint(True)
         self._dialog.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_NORMAL)
         self._label = gtk.Label()
         self._entry = gtk.combo_box_new_text()
@@ -235,7 +233,6 @@ class SelectDialog:
         self._dialog.vbox.pack_end(hbox, True, True, 0)
         self._dialog.show_all()
         self._dialog.set_keep_above(True)
-        self._dialog.set_keep_above(False)
         response = self._dialog.run()
         if response == gtk.RESPONSE_OK:
             return self._entry.get_active()
@@ -252,7 +249,7 @@ class FileChooserDialog:
         self._dialog = gtk.FileChooserDialog(buttons=(gtk.STOCK_CANCEL,
             gtk.RESPONSE_CANCEL, gtk.STOCK_OPEN, gtk.RESPONSE_OK))
         self._dialog.set_position(gtk.WIN_POS_CENTER)
-        self._dialog.set_skip_taskbar_hint(False)
+        self._dialog.set_skip_taskbar_hint(True)
         self._dialog.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_NORMAL)
 
     def set_title(self, title):
@@ -272,7 +269,6 @@ class FileChooserDialog:
             self._dialog.add_filter(file_filter)
         self._dialog.show_all()
         self._dialog.set_keep_above(True)
-        self._dialog.set_keep_above(False)
         response = self._dialog.run()
         if response == gtk.RESPONSE_OK:
             response_path = self._dialog.get_filename()
