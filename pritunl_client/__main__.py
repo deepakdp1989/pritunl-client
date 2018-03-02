@@ -291,10 +291,10 @@ def _pk_start(autostart=False):
     args.append('--up-restart')
     args.extend(['--up', script_path])
     args.extend(['--down', script_path])
-    args.extend(['--route-pre-down', '/usr/bin/true'])
-    args.extend(['--tls-verify', '/usr/bin/true'])
-    args.extend(['--ipchange', '/usr/bin/true'])
-    args.extend(['--route-up', '/usr/bin/true'])
+    args.extend(['--route-pre-down', '/bin/true'])
+    args.extend(['--tls-verify', '/bin/true'])
+    args.extend(['--ipchange', '/bin/true'])
+    args.extend(['--route-up', '/bin/true'])
 
     try:
         with open(conf_path, 'w') as conf_file:
