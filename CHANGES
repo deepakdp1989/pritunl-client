@@ -1,6 +1,10 @@
 pritunl-client changelog
 ========================
 
+<%= version %>
+
+Fix VPN startup issue
+
 Version 1.0.1632.44 2018-03-02
 ------------------------------
 
