@@ -339,11 +339,11 @@ def pk_autostart():
 def pk_stop():
     pid = int(sys.argv[1])
 
-    cmdline_path = '/proc/%s/cmdline' % pid
+    cmdline_path = '/proc/%d/cmdline' % pid
     if not os.path.exists(cmdline_path):
         return
 
-    with open('/proc/%s/cmdline' % pid, 'r') as cmdline_file:
+    with open(cmdline_path, 'r') as cmdline_file:
         cmdline = cmdline_file.read().strip().strip('\x00')
         if not 'pritunl-client-pk-start' in cmdline and \
                 not 'pritunl-client-pk-autostart' in cmdline:
@@ -352,7 +352,7 @@ def pk_stop():
     os.kill(pid, signal.SIGTERM)
     for i in xrange(int(5 / 0.1)):
         time.sleep(0.1)
-        if not os.path.exists('/proc/%s' % pid):
+        if not os.path.exists('/proc/%d' % pid):
             break
         os.kill(pid, signal.SIGTERM)
 
