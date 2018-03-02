@@ -246,7 +246,7 @@ def get_env():
     with open(env_path, 'r') as env_file:
         env = json.loads(env_file.read())
 
-    if not env.get('VPN_CONF'):
+    if not env.get('PRITUNL_CLIENT_ENV'):
         raise ValueError('Invalid environment file')
 
     os.remove(env_path)

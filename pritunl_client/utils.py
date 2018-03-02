@@ -98,6 +98,7 @@ def get_disconnected_logo():
     return DISCONNECTED_LOGO_DEFAULT_PATH
 
 def write_env(env_data):
+    env_data['PRITUNL_CLIENT_ENV'] = True
     env_path = os.path.join(TMP_DIR, uuid.uuid4().hex)
     with open(env_path, 'w') as env_file:
         os.chmod(env_path, 0200)
