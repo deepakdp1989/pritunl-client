@@ -1,6 +1,10 @@
 pritunl-client changelog
 ========================
 
+<%= version %>
+
+Interface improvements
+
 Version 1.0.1616.7 2018-02-14
 -----------------------------
 
