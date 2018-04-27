@@ -24,6 +24,7 @@ import Crypto.Random
 
 _connections = {}
 _ip_regex = re.compile(r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}')
+_ip6_regex = re.compile(r'\[[a-fA-F0-9:]*\]')
 
 class Profile(object):
     def __init__(self, id=None):
@@ -577,9 +578,12 @@ def import_uri(profile_uri):
         profile_uri = 'https://' + profile_uri
     profile_uri = profile_uri.replace('/k/', '/ku/', 1)
 
+    verify = not _ip_regex.search(profile_uri) and \
+        not _ip6_regex.search(profile_uri)
+
     response = requests.get(
         profile_uri,
-        verify=not _ip_regex.search(profile_uri),
+        verify=verify,
         timeout=IMPORT_TIMEOUT,
     )
     if response.status_code == 200:
