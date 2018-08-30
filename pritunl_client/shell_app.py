@@ -27,7 +27,10 @@ class Request(BaseHTTPServer.BaseHTTPRequestHandler):
 
     def do_PUT(self):
         try:
-            if self.headers.get('Auth-Token') != auth_token:
+            if self.headers.get('Auth-Token') != auth_token or \
+                    self.headers.get('User-Agent') != 'pritunl' or \
+                    self.headers.get('Origin') or \
+                    self.headers.get('Referer'):
                 self.send_response(401)
                 return
 
@@ -58,7 +61,10 @@ class Request(BaseHTTPServer.BaseHTTPRequestHandler):
 
     def do_POST(self):
         try:
-            if self.headers.get('Auth-Token') != auth_token:
+            if self.headers.get('Auth-Token') != auth_token or \
+                    self.headers.get('User-Agent') != 'pritunl' or \
+                    self.headers.get('Origin') or \
+                    self.headers.get('Referer'):
                 self.send_response(401)
                 return
 
@@ -81,7 +87,10 @@ class Request(BaseHTTPServer.BaseHTTPRequestHandler):
 
     def do_DELETE(self):
         try:
-            if self.headers.get('Auth-Token') != auth_token:
+            if self.headers.get('Auth-Token') != auth_token or \
+                    self.headers.get('User-Agent') != 'pritunl' or \
+                    self.headers.get('Origin') or \
+                    self.headers.get('Referer'):
                 self.send_response(401)
                 return
 
@@ -109,6 +118,12 @@ class Request(BaseHTTPServer.BaseHTTPRequestHandler):
             if self.args[1] == 'token':
                 self.do_token()
             elif self.args[1] == 'list':
+                if self.headers.get('Auth-Token') != auth_token or \
+                        self.headers.get('User-Agent') != 'pritunl' or \
+                        self.headers.get('Origin') or \
+                        self.headers.get('Referer'):
+                    self.send_response(401)
+                    return
                 if self.headers.get('Auth-Token') != auth_token:
                     self.send_response(401)
                     return
