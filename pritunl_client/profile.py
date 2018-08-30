@@ -19,8 +19,6 @@ import hashlib
 import hmac
 import re
 import collections
-import Crypto.Cipher.AES
-import Crypto.Random
 
 _connections = {}
 _ip_regex = re.compile(r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}')
