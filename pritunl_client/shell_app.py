@@ -173,6 +173,9 @@ class Request(BaseHTTPServer.BaseHTTPRequestHandler):
             pass
 
         prfl = profile.Profile.get_profile(self.args[2])
+        if not prfl:
+            self.send_text_response('Profile not found', 404)
+            return
 
         prfl.sync_conf()
 
@@ -201,18 +204,27 @@ class Request(BaseHTTPServer.BaseHTTPRequestHandler):
 
     def do_stop(self):
         prfl = profile.Profile.get_profile(self.args[2])
+        if not prfl:
+            self.send_text_response('Profile not found', 404)
+            return
         prfl.stop()
 
         self.send_response(200)
 
     def do_enable(self):
         prfl = profile.Profile.get_profile(self.args[2])
+        if not prfl:
+            self.send_text_response('Profile not found', 404)
+            return
         prfl.set_autostart(True)
 
         self.send_response(200)
 
     def do_disable(self):
         prfl = profile.Profile.get_profile(self.args[2])
+        if not prfl:
+            self.send_text_response('Profile not found', 404)
+            return
         prfl.set_autostart(False)
 
         self.send_response(200)
