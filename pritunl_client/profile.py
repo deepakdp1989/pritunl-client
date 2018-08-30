@@ -552,7 +552,10 @@ class Profile(object):
             return profile_linux.ProfileLinux(id)
         elif PLATFORM == SHELL:
             from pritunl_client import profile_shell
-            return profile_shell.ProfileShell(id)
+            prfl = profile_shell.ProfileShell(re.sub(r'\W+', '', id))
+            if prfl.exists:
+                return prfl
+            return
         else:
             raise NotImplementedError('Platform %s not supported' % PLATFORM)
 
