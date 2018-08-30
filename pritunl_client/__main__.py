@@ -31,8 +31,14 @@ def client_shell():
     from pritunl_client import click
 
     def get_auth_headers(add_headers=None):
-        response = requests.get('http://localhost:9797/token')
+        response = requests.get(
+            'http://localhost:9797/token',
+            headers={
+                'User-Agent': 'pritunl',
+            },
+        )
         headers = {
+            'User-Agent': 'pritunl',
             'Auth-Token': response.content,
         }
         if add_headers:
