@@ -119,6 +119,10 @@ class Profile(object):
             return connection_data.get('status', ENDED)
         return ENDED
 
+    @property
+    def exists(self):
+        return os.path.exists(self.conf_path)
+
     def load(self):
         try:
             if os.path.exists(self.conf_path):
