@@ -3,7 +3,6 @@ from pritunl_client.constants import *
 import optparse
 import sys
 import os
-import re
 import subprocess
 import signal
 import time
