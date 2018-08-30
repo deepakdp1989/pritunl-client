@@ -23,6 +23,7 @@ import collections
 _connections = {}
 _ip_regex = re.compile(r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}')
 _ip6_regex = re.compile(r'\[[a-fA-F0-9:]*\]')
+_alphanum_regex = re.compile(r'\W+')
 
 class Profile(object):
     def __init__(self, id=None):
@@ -550,7 +551,7 @@ class Profile(object):
         if PLATFORM == LINUX:
             from pritunl_client import profile_linux
             if id:
-                prfl = profile_linux.ProfileLinux(re.sub(r'\W+', '', id))
+                prfl = profile_linux.ProfileLinux(_alphanum_regex.sub('', id))
                 if prfl.exists:
                     return prfl
                 return
@@ -559,7 +560,7 @@ class Profile(object):
         elif PLATFORM == SHELL:
             from pritunl_client import profile_shell
             if id:
-                prfl = profile_shell.ProfileShell(re.sub(r'\W+', '', id))
+                prfl = profile_shell.ProfileShell(_alphanum_regex.sub('', id))
                 if prfl.exists:
                     return prfl
                 return
