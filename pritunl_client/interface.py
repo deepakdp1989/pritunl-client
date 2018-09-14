@@ -4,30 +4,36 @@ from pritunl_client.exceptions import *
 if PLATFORM == SHELL:
     raise TypeError('Interface not supported for platform')
 
-import gobject
-import pygtk
-pygtk.require('2.0')
-import gtk
+import gi
 
 HAS_APPINDICATOR = False
 try:
-    import appindicator
+    gi.require_version('AppIndicator3', '0.1')
+    from gi.repository import AppIndicator3 as appindicator
     HAS_APPINDICATOR = True
-except ImportError:
+except ValueError, ImportError:
     pass
 
+gi.require_version('Gtk', '3.0')
+gi.require_version('Gdk', '3.0')
+gi.require_version('GdkPixbuf', '2.0')
+from gi.repository import Gtk as gtk
+from gi.repository import GObject as gobject
+from gi.repository import Gdk as gdk
+from gi.repository import GdkPixbuf
+
 _mappings = {
-    BUTTONS_OK: gtk.BUTTONS_OK,
-    BUTTONS_CANCEL: gtk.BUTTONS_CANCEL,
-    BUTTONS_OK_CANCEL: gtk.BUTTONS_OK_CANCEL,
-    MESSAGE_INFO: gtk.MESSAGE_INFO,
-    MESSAGE_QUESTION: gtk.MESSAGE_QUESTION,
-    MESSAGE_ERROR: gtk.MESSAGE_ERROR,
-    MESSAGE_LOADING: gtk.MESSAGE_INFO,
+    BUTTONS_OK: gtk.ButtonsType.OK,
+    BUTTONS_CANCEL: gtk.ButtonsType.CANCEL,
+    BUTTONS_OK_CANCEL: gtk.ButtonsType.OK_CANCEL,
+    MESSAGE_INFO: gtk.MessageType.INFO,
+    MESSAGE_QUESTION: gtk.MessageType.QUESTION,
+    MESSAGE_ERROR: gtk.MessageType.ERROR,
+    MESSAGE_LOADING: gtk.MessageType.INFO,
 }
 
 def lookup_icon(name):
-    icons = gtk.icon_theme_get_default()
+    icons = gtk.IconTheme.get_default()
     logo = icons.lookup_icon(name, -1, 0)
     if logo:
         return logo.get_filename()
@@ -52,9 +58,9 @@ class MessageDialog:
         self._dialog = gtk.MessageDialog(
             type=_mappings[self._type],
             buttons=_mappings[self._buttons])
-        self._dialog.set_position(gtk.WIN_POS_CENTER)
+        self._dialog.set_position(gtk.WindowPosition.CENTER)
         self._dialog.set_skip_taskbar_hint(True)
-        self._dialog.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_NORMAL)
+        self._dialog.set_type_hint(gdk.WindowTypeHint.NORMAL)
 
         if self._type == MESSAGE_LOADING:
             spinner = gtk.Spinner()
@@ -105,8 +111,8 @@ class MessageDialog:
         self._image_path = image_path
 
         if self._dialog:
-            pix_buf = gtk.gdk.pixbuf_new_from_file(image_path)
-            pix_buf = pix_buf.scale_simple(90, 90, gtk.gdk.INTERP_BILINEAR)
+            pix_buf = GdkPixbuf.Pixbuf.new_from_file(image_path)
+            pix_buf = pix_buf.scale_simple(90, 90, GdkPixbuf.InterpType.BILINEAR)
             image = gtk.Image()
             image.set_from_pixbuf(pix_buf)
             image.show()
@@ -128,9 +134,9 @@ class MessageDialog:
         self._dialog.show_all()
         self._dialog.set_keep_above(True)
         response = self._dialog.run()
-        if response == gtk.RESPONSE_OK:
+        if response == gtk.ResponseType.OK:
             return True
-        elif response == gtk.RESPONSE_CANCEL:
+        elif response == gtk.ResponseType.CANCEL:
             return False
 
     def destroy(self):
@@ -142,13 +148,13 @@ class MessageDialog:
 class InputDialog:
     def __init__(self):
         self._dialog = gtk.MessageDialog(
-            type=gtk.MESSAGE_QUESTION,
-            buttons=gtk.BUTTONS_OK_CANCEL,
+            type=gtk.MessageType.QUESTION,
+            buttons=gtk.ButtonsType.OK_CANCEL,
         )
-        self._dialog.set_position(gtk.WIN_POS_CENTER)
+        self._dialog.set_position(gtk.WindowPosition.CENTER)
         self._dialog.set_skip_taskbar_hint(True)
-        self._dialog.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_NORMAL)
-        self._dialog.set_default_response(gtk.RESPONSE_OK)
+        self._dialog.set_type_hint(gdk.WindowTypeHint.NORMAL)
+        self._dialog.set_default_response(gtk.ResponseType.OK)
         self._label = gtk.Label()
         self._entry = gtk.Entry()
         self._entry.set_activates_default(True)
@@ -177,12 +183,12 @@ class InputDialog:
     def run(self):
         hbox = gtk.HBox()
         hbox.pack_start(self._label, False, 5, 5)
-        hbox.pack_end(self._entry)
+        hbox.pack_end(self._entry, True, True, 0)
         self._dialog.vbox.pack_end(hbox, True, True, 0)
         self._dialog.show_all()
         self._dialog.set_keep_above(True)
         response = self._dialog.run()
-        if response == gtk.RESPONSE_OK:
+        if response == gtk.ResponseType.OK:
             return self._entry.get_text()
 
     def destroy(self):
@@ -194,12 +200,12 @@ class InputDialog:
 class SelectDialog:
     def __init__(self):
         self._dialog = gtk.MessageDialog(
-            type=gtk.MESSAGE_QUESTION,
-            buttons=gtk.BUTTONS_OK_CANCEL,
+            type=gtk.MessageType.QUESTION,
+            buttons=gtk.ButtonsType.OK_CANCEL,
         )
-        self._dialog.set_position(gtk.WIN_POS_CENTER)
+        self._dialog.set_position(gtk.WindowPosition.CENTER)
         self._dialog.set_skip_taskbar_hint(True)
-        self._dialog.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_NORMAL)
+        self._dialog.set_type_hint(gdk.WindowTypeHint.NORMAL)
         self._label = gtk.Label()
         self._entry = gtk.combo_box_new_text()
 
@@ -233,7 +239,7 @@ class SelectDialog:
         self._dialog.show_all()
         self._dialog.set_keep_above(True)
         response = self._dialog.run()
-        if response == gtk.RESPONSE_OK:
+        if response == gtk.ResponseType.OK:
             return self._entry.get_active()
 
     def destroy(self):
@@ -246,10 +252,10 @@ class FileChooserDialog:
     def __init__(self):
         self._filters = {}
         self._dialog = gtk.FileChooserDialog(buttons=(gtk.STOCK_CANCEL,
-                                                      gtk.RESPONSE_CANCEL, gtk.STOCK_OPEN, gtk.RESPONSE_OK))
-        self._dialog.set_position(gtk.WIN_POS_CENTER)
+                                                      gtk.ResponseType.CANCEL, gtk.STOCK_OPEN, gtk.ResponseType.OK))
+        self._dialog.set_position(gtk.WindowPosition.CENTER)
         self._dialog.set_skip_taskbar_hint(True)
-        self._dialog.set_type_hint(gtk.gdk.WINDOW_TYPE_HINT_NORMAL)
+        self._dialog.set_type_hint(gdk.WindowTypeHint.NORMAL)
 
     def set_title(self, title):
         self._dialog.set_title(title)
@@ -269,7 +275,7 @@ class FileChooserDialog:
         self._dialog.show_all()
         self._dialog.set_keep_above(True)
         response = self._dialog.run()
-        if response == gtk.RESPONSE_OK:
+        if response == gtk.ResponseType.OK:
             response_path = self._dialog.get_filename()
             if response_path:
                 return response_path
@@ -356,9 +362,6 @@ class SeparatorMenuItem:
 
 class StatusIconApp:
     def __init__(self):
-        gtk.threads_init()
-        gtk.threads_enter()
-
         self._callback = None
         if HAS_APPINDICATOR:
             self._icon = None
@@ -368,7 +371,7 @@ class StatusIconApp:
             self._icon.connect('activate', self._on_activate)
             self._icon.connect('popup_menu', self._on_popup_menu)
 
-        icons = gtk.icon_theme_get_default()
+        icons = gtk.IconTheme.get_default()
         icons.connect('changed', self._on_theme_change)
 
     def _on_activate(self, widget):
@@ -387,14 +390,14 @@ class StatusIconApp:
 
     def set_tooltip(self, label):
         if not HAS_APPINDICATOR:
-            self._icon.set_tooltip(label)
+            self._icon.set_tooltip_text(label)
 
     def set_icon(self, icon_path):
         if HAS_APPINDICATOR:
             if not self._icon:
-                self._icon = appindicator.Indicator(APP_NAME, icon_path,
-                    appindicator.CATEGORY_APPLICATION_STATUS)
-                self._icon.set_status(appindicator.STATUS_ACTIVE)
+                self._icon = appindicator.Indicator.new(APP_NAME, icon_path,
+                    appindicator.IndicatorCategory.APPLICATION_STATUS)
+                self._icon.set_status(appindicator.IndicatorStatus.ACTIVE)
             else:
                 self._icon.set_icon(icon_path)
         else:
