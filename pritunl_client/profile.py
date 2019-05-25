@@ -304,38 +304,22 @@ class Profile(object):
             else:
                 callback()
 
-    def _get_auth_token(self):
-        if not self.token:
-            return
-
-        if not self.auth_token or \
-                not self.auth_token_time or \
-                abs(self.auth_token_time - int(time.time())) > (
-                    self.token_ttl or 604800):
-            self.auth_token = uuid.uuid4().hex
-            self.auth_token_time = int(time.time())
-            self.commit()
-
-        return self.auth_token
-
     def start(self, status_callback, connect_callback=None, passwd=None):
         if self.status in ACTIVE_STATES:
             self._set_status(self.status)
             return False
-        auth_token = self._get_auth_token()
-        self._start(status_callback, connect_callback, auth_token, passwd)
+        self._start(status_callback, connect_callback, passwd)
         return True
 
     def start_autostart(self, status_callback, connect_callback=None):
         if self.status in ACTIVE_STATES:
             return
-        auth_token = self._get_auth_token()
-        self._start_autostart(status_callback, connect_callback, auth_token)
+        self._start_autostart(status_callback, connect_callback)
 
-    def _start(self, status_callback, connect_callback, auth_token, passwd):
+    def _start(self, status_callback, connect_callback, passwd):
         raise NotImplementedError()
 
-    def _start_autostart(self, status_callback, connect_callback, auth_token):
+    def _start_autostart(self, status_callback, connect_callback):
         raise NotImplementedError()
 
     def _kill_pid(self, pid):
