@@ -509,7 +509,8 @@ class Profile(object):
                 profile_id, extension = os.path.splitext(profile_path)
                 if extension == '.ovpn':
                     prfl = cls.get_profile(profile_id)
-                    prflsMap[prfl.name].append(prfl)
+                    if prfl:
+                        prflsMap[prfl.name].append(prfl)
 
         for name in sorted(prflsMap.keys()):
             for prfl in prflsMap[name]:
