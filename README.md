@@ -147,13 +147,13 @@ sudo apt-get update
 sudo apt-get install pritunl-client
 ```
 
-### fedora 25 desktop
+### fedora 28 desktop
 
 ```
 sudo tee -a /etc/yum.repos.d/pritunl.repo << EOF
 [pritunl]
 name=Pritunl Stable Repository
-baseurl=https://repo.pritunl.com/stable/yum/fedora/25/
+baseurl=https://repo.pritunl.com/stable/yum/fedora/28/
 gpgcheck=1
 enabled=1
 EOF
@@ -163,45 +163,13 @@ gpg --armor --export 7568D9BB55FF9E5287D586017AE645C0CF8E292A > key.tmp; sudo rp
 sudo dnf install pritunl-client-gtk
 ```
 
-### fedora 25 server
+### fedora 28 server
 
 ```
 sudo tee -a /etc/yum.repos.d/pritunl.repo << EOF
 [pritunl]
 name=Pritunl Stable Repository
-baseurl=https://repo.pritunl.com/stable/yum/fedora/25/
-gpgcheck=1
-enabled=1
-EOF
-
-gpg --keyserver hkp://keyserver.ubuntu.com --recv-keys 7568D9BB55FF9E5287D586017AE645C0CF8E292A
-gpg --armor --export 7568D9BB55FF9E5287D586017AE645C0CF8E292A > key.tmp; sudo rpm --import key.tmp; rm -f key.tmp
-sudo dnf install pritunl-client
-```
-
-### fedora 26 desktop
-
-```
-sudo tee -a /etc/yum.repos.d/pritunl.repo << EOF
-[pritunl]
-name=Pritunl Stable Repository
-baseurl=https://repo.pritunl.com/stable/yum/fedora/26/
-gpgcheck=1
-enabled=1
-EOF
-
-gpg --keyserver hkp://keyserver.ubuntu.com --recv-keys 7568D9BB55FF9E5287D586017AE645C0CF8E292A
-gpg --armor --export 7568D9BB55FF9E5287D586017AE645C0CF8E292A > key.tmp; sudo rpm --import key.tmp; rm -f key.tmp
-sudo dnf install pritunl-client-gtk
-```
-
-### fedora 26 server
-
-```
-sudo tee -a /etc/yum.repos.d/pritunl.repo << EOF
-[pritunl]
-name=Pritunl Stable Repository
-baseurl=https://repo.pritunl.com/stable/yum/fedora/26/
+baseurl=https://repo.pritunl.com/stable/yum/fedora/28/
 gpgcheck=1
 enabled=1
 EOF
