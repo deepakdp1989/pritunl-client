@@ -124,9 +124,6 @@ class Request(BaseHTTPServer.BaseHTTPRequestHandler):
                         self.headers.get('Referer'):
                     self.send_response(401)
                     return
-                if self.headers.get('Auth-Token') != auth_token:
-                    self.send_response(401)
-                    return
 
                 self.do_list()
             else:
