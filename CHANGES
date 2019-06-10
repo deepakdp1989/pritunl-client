@@ -1,6 +1,10 @@
 pritunl-client changelog
 ========================
 
+<%= version %>
+
+Improve profile management
+
 Version 1.0.1865.25 2018-10-21
 ------------------------------
 
