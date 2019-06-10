@@ -10,23 +10,16 @@ import hashlib
 import signal
 
 class ProfileShell(profile.Profile):
-    def _start(self, status_callback, connect_callback, auth_token, passwd):
+    def _start(self, status_callback, connect_callback, passwd):
         def on_exit(return_code):
             if self.status in ACTIVE_STATES:
                 self._set_status(ERROR)
 
         args = ['openvpn', '--config', self.path]
 
-        if auth_token or passwd:
+        if passwd:
             args.append('--auth-user-pass')
             args.append(self.passwd_path)
-
-            if auth_token:
-                auth_token += '<%=AUTH_TOKEN=%>'
-                if passwd:
-                    passwd = auth_token + passwd
-                else:
-                    passwd = auth_token
 
             with open(self.passwd_path, 'w') as passwd_file:
                 os.chmod(self.passwd_path, 0600)
@@ -35,8 +28,8 @@ class ProfileShell(profile.Profile):
 
         self._run_ovpn(status_callback, connect_callback, args, on_exit, False)
 
-    def _start_autostart(self, status_callback, connect_callback, auth_token):
-        self._start(status_callback, connect_callback, auth_token, None)
+    def _start_autostart(self, status_callback, connect_callback):
+        self._start(status_callback, connect_callback, None)
 
     def _stop(self, silent):
         data = profile._connections.get(self.id)
