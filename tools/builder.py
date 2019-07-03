@@ -392,7 +392,7 @@ if cmd == 'set-version':
     subprocess.check_call(['git', 'add', CHANGES_PATH])
     subprocess.check_call(['git', 'add', INIT_PATH])
     subprocess.check_call(['git', 'add', SETUP_PATH])
-    subprocess.check_call(['git', 'commit', '-m', 'Create new release'])
+    subprocess.check_call(['git', 'commit', '-S', '-m', 'Create new release'])
     subprocess.check_call(['git', 'push'])
 
 
@@ -480,11 +480,13 @@ if cmd == 'build' or cmd == 'build-upload':
                 'pkgver="(.*)"',
                 'pkgver="%s"' % cur_version,
                 pkgbuild_file.read(),
+                count=1,
             )
             pkgbuild_data = re.sub(
                 '"[a-f0-9]{64}"',
                 '"%s"' % archive_sha256_sum,
                 pkgbuild_data,
+                count=1,
             )
 
         with open(pkgbuild_path, 'w') as pkgbuild_file:
