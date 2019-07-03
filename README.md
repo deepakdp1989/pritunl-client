@@ -103,7 +103,7 @@ sudo yum install pritunl-client
 
 ```
 sudo tee -a /etc/apt/sources.list.d/pritunl.list << EOF
-deb http://repo.pritunl.com/stable/apt jessie main
+deb https://repo.pritunl.com/stable/apt jessie main
 EOF
 
 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com --recv 7568D9BB55FF9E5287D586017AE645C0CF8E292A
@@ -115,7 +115,7 @@ sudo apt-get install pritunl-client-gtk
 
 ```
 sudo tee -a /etc/apt/sources.list.d/pritunl.list << EOF
-deb http://repo.pritunl.com/stable/apt jessie main
+deb https://repo.pritunl.com/stable/apt jessie main
 EOF
 
 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com --recv 7568D9BB55FF9E5287D586017AE645C0CF8E292A
@@ -127,7 +127,7 @@ sudo apt-get install pritunl-client
 
 ```
 sudo tee -a /etc/apt/sources.list.d/pritunl.list << EOF
-deb http://repo.pritunl.com/stable/apt strech main
+deb https://repo.pritunl.com/stable/apt strech main
 EOF
 
 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com --recv 7568D9BB55FF9E5287D586017AE645C0CF8E292A
@@ -139,7 +139,7 @@ sudo apt-get install pritunl-client-gtk
 
 ```
 sudo tee -a /etc/apt/sources.list.d/pritunl.list << EOF
-deb http://repo.pritunl.com/stable/apt strech main
+deb https://repo.pritunl.com/stable/apt strech main
 EOF
 
 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com --recv 7568D9BB55FF9E5287D586017AE645C0CF8E292A
@@ -183,7 +183,7 @@ sudo dnf install pritunl-client
 
 ```
 sudo tee -a /etc/apt/sources.list.d/pritunl.list << EOF
-deb http://repo.pritunl.com/stable/apt trusty main
+deb https://repo.pritunl.com/stable/apt trusty main
 EOF
 
 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com --recv 7568D9BB55FF9E5287D586017AE645C0CF8E292A
@@ -195,7 +195,7 @@ sudo apt-get install pritunl-client-gtk
 
 ```
 sudo tee -a /etc/apt/sources.list.d/pritunl.list << EOF
-deb http://repo.pritunl.com/stable/apt trusty main
+deb https://repo.pritunl.com/stable/apt trusty main
 EOF
 
 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com --recv 7568D9BB55FF9E5287D586017AE645C0CF8E292A
@@ -207,7 +207,7 @@ sudo apt-get install pritunl-client
 
 ```
 sudo tee -a /etc/apt/sources.list.d/pritunl.list << EOF
-deb http://repo.pritunl.com/stable/apt xenial main
+deb https://repo.pritunl.com/stable/apt xenial main
 EOF
 
 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com --recv 7568D9BB55FF9E5287D586017AE645C0CF8E292A
@@ -219,7 +219,7 @@ sudo apt-get install pritunl-client-gtk
 
 ```
 sudo tee -a /etc/apt/sources.list.d/pritunl.list << EOF
-deb http://repo.pritunl.com/stable/apt xenial main
+deb https://repo.pritunl.com/stable/apt xenial main
 EOF
 
 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com --recv 7568D9BB55FF9E5287D586017AE645C0CF8E292A
@@ -231,7 +231,7 @@ sudo apt-get install pritunl-client
 
 ```
 sudo tee -a /etc/apt/sources.list.d/pritunl.list << EOF
-deb http://repo.pritunl.com/stable/apt yakkety main
+deb https://repo.pritunl.com/stable/apt yakkety main
 EOF
 
 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com --recv 7568D9BB55FF9E5287D586017AE645C0CF8E292A
@@ -243,7 +243,7 @@ sudo apt-get install pritunl-client-gtk
 
 ```
 sudo tee -a /etc/apt/sources.list.d/pritunl.list << EOF
-deb http://repo.pritunl.com/stable/apt yakkety main
+deb https://repo.pritunl.com/stable/apt yakkety main
 EOF
 
 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com --recv 7568D9BB55FF9E5287D586017AE645C0CF8E292A
@@ -255,7 +255,7 @@ sudo apt-get install pritunl-client
 
 ```
 sudo tee -a /etc/apt/sources.list.d/pritunl.list << EOF
-deb http://repo.pritunl.com/stable/apt zesty main
+deb https://repo.pritunl.com/stable/apt zesty main
 EOF
 
 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com --recv 7568D9BB55FF9E5287D586017AE645C0CF8E292A
@@ -267,7 +267,7 @@ sudo apt-get install pritunl-client-gtk
 
 ```
 sudo tee -a /etc/apt/sources.list.d/pritunl.list << EOF
-deb http://repo.pritunl.com/stable/apt zesty main
+deb https://repo.pritunl.com/stable/apt zesty main
 EOF
 
 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com --recv 7568D9BB55FF9E5287D586017AE645C0CF8E292A
@@ -279,7 +279,7 @@ sudo apt-get install pritunl-client
 
 ```
 sudo tee -a /etc/apt/sources.list.d/pritunl.list << EOF
-deb http://repo.pritunl.com/stable/apt artful main
+deb https://repo.pritunl.com/stable/apt artful main
 EOF
 
 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com --recv 7568D9BB55FF9E5287D586017AE645C0CF8E292A
@@ -291,7 +291,7 @@ sudo apt-get install pritunl-client-gtk
 
 ```
 sudo tee -a /etc/apt/sources.list.d/pritunl.list << EOF
-deb http://repo.pritunl.com/stable/apt artful main
+deb https://repo.pritunl.com/stable/apt artful main
 EOF
 
 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com --recv 7568D9BB55FF9E5287D586017AE645C0CF8E292A
