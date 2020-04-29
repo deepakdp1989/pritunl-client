@@ -148,7 +148,7 @@ class Profile(object):
         temp_path = self.conf_path + '_%s.tmp' % uuid.uuid4().hex
         try:
             with open(temp_path, 'w') as conf_file:
-                os.chmod(temp_path, 0o600)
+                os.chmod(temp_path, 0600)
                 conf_file.write(json.dumps(self.dict()))
             try:
                 os.rename(temp_path, self.conf_path)
@@ -185,7 +185,7 @@ class Profile(object):
     def write_profile(self, profile_data):
         profile_data, conf_data = self._parse_profile(profile_data)
         with open(self.path, 'w') as profile_file:
-            os.chmod(self.path, 0o600)
+            os.chmod(self.path, 0600)
             profile_file.write(profile_data)
 
         self.user_name = conf_data.get('user', self.user_name)
@@ -438,7 +438,7 @@ class Profile(object):
                         break
                     else:
                         continue
-                print(line.strip())
+                print line.strip()
                 with open(self.log_path, 'a') as log_file:
                     log_file.write(line)
 
@@ -451,7 +451,7 @@ class Profile(object):
                         break
                     else:
                         continue
-                print(line.strip())
+                print line.strip()
                 with open(self.log_path, 'a') as log_file:
                     log_file.write(line)
                 if not started:
@@ -489,7 +489,7 @@ class Profile(object):
         thread.start()
 
         if wait:
-            for _ in range(300):
+            for _ in xrange(300):
                 time.sleep(0.1)
                 if process.poll() is not None:
                     break

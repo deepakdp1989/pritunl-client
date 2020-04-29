@@ -11,7 +11,7 @@ try:
     gi.require_version('AppIndicator3', '0.1')
     from gi.repository import AppIndicator3 as appindicator
     HAS_APPINDICATOR = True
-except ValueError as ImportError:
+except ValueError, ImportError:
     pass
 
 gi.require_version('Gtk', '3.0')
@@ -270,7 +270,7 @@ class FileChooserDialog:
         self._filters[name].add_pattern(pattern)
 
     def run(self):
-        for file_filter in list(self._filters.values()):
+        for file_filter in self._filters.values():
             self._dialog.add_filter(file_filter)
         self._dialog.show_all()
         self._dialog.set_keep_above(True)

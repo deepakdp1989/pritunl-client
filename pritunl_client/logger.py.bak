@@ -7,7 +7,7 @@ import traceback
 
 class LogHandler(logging.handlers.RotatingFileHandler):
     def emit(self, record):
-        print(self.format(record))
+        print self.format(record)
         logging.FileHandler.emit(self, record)
 
 class LogFilter(logging.Filter):
@@ -42,7 +42,7 @@ class LogFormatter(logging.Formatter):
 
                 if record.data:
                     width = len(max(record.data, key=len))
-                    for key, val in list(record.data.items()):
+                    for key, val in record.data.items():
                         formatted_record += '\n  %s = %r' % (
                             key.ljust(width), val)
 

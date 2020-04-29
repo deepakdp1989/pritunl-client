@@ -19,7 +19,7 @@ def client_gui():
     (options, args) = parser.parse_args()
 
     if options.version:
-        print('%s v%s' % (pritunl_client.__title__, pritunl_client.__version__))
+        print '%s v%s' % (pritunl_client.__title__, pritunl_client.__version__)
     else:
         client_app = app.App()
         client_app.main()
@@ -303,11 +303,11 @@ def _pk_start(autostart=False):
 
     try:
         with open(conf_path, 'w') as conf_file:
-            os.chmod(conf_path, 0o600)
+            os.chmod(conf_path, 0600)
             conf_file.write(conf_data)
         if passwd:
             with open(pass_path, 'w') as passwd_file:
-                os.chmod(pass_path, 0o600)
+                os.chmod(pass_path, 0600)
                 passwd_file.write('pritunl_client\n')
                 passwd_file.write('%s\n' % passwd)
 
@@ -355,7 +355,7 @@ def pk_stop():
             raise ValueError('Not a pritunl client process')
 
     os.kill(pid, signal.SIGTERM)
-    for i in range(int(5 / 0.1)):
+    for i in xrange(int(5 / 0.1)):
         time.sleep(0.1)
         if not os.path.exists('/proc/%d' % pid):
             break

@@ -1,5 +1,5 @@
-from .constants import *
-from .exceptions import *
+from constants import *
+from exceptions import *
 from pritunl_client import profile
 
 import os
@@ -19,7 +19,7 @@ class ProfileShell(profile.Profile):
             args.append(self.passwd_path)
 
             with open(self.passwd_path, 'w') as passwd_file:
-                os.chmod(self.passwd_path, 0o600)
+                os.chmod(self.passwd_path, 0600)
                 passwd_file.write('pritunl_client\n')
                 passwd_file.write('%s\n' % passwd)
 
@@ -35,13 +35,13 @@ class ProfileShell(profile.Profile):
             data['process'] = None
             if process:
                 process.terminate()
-                for i in range(int(5 / 0.1)):
+                for i in xrange(int(5 / 0.1)):
                     time.sleep(0.1)
                     if process.poll() is not None:
                         break
                     process.terminate()
 
-                for i in range(int(5 / 0.1)):
+                for i in xrange(int(5 / 0.1)):
                     time.sleep(0.1)
                     if process.poll() is not None:
                         break
@@ -52,7 +52,7 @@ class ProfileShell(profile.Profile):
         self.commit()
 
     def _kill_pid(self, pid):
-        for i in range(2):
+        for i in xrange(2):
             try:
                 os.kill(pid, signal.SIGTERM)
             except OSError:

@@ -4,19 +4,19 @@ from pritunl_client import profile
 from pritunl_client import utils
 from pritunl_client import logger
 
-import http.server
-import socketserver
+import BaseHTTPServer
+import SocketServer
 import threading
 import json
-import http.client
+import httplib
 
 auth_token = utils.generate_secret()
 
-class ThreadingHTTPServer(socketserver.ThreadingMixIn,
-        http.server.HTTPServer):
+class ThreadingHTTPServer(SocketServer.ThreadingMixIn,
+        BaseHTTPServer.HTTPServer):
     pass
 
-class Request(http.server.BaseHTTPRequestHandler):
+class Request(BaseHTTPServer.BaseHTTPRequestHandler):
     def send_text_response(self, text, status_code=200):
         self.send_response(status_code)
         self.send_header('Content-type', 'text/plain')
@@ -143,7 +143,7 @@ class Request(http.server.BaseHTTPRequestHandler):
         elif profile_uri:
             try:
                 profile.import_uri(profile_uri)
-            except http.client.HTTPException:
+            except httplib.HTTPException:
                 self.send_text_response('Unable to retrieve profile or ' +
                     'profile path does not exist', 500)
         else:
